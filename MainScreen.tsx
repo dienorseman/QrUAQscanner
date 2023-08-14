@@ -20,13 +20,6 @@ export const MainScreen = () => {
         let { isConnected } = await getNetworkStateAsync();
         if (typeof isConnected === 'boolean') {
             dispatch(switchOnline(isConnected));
-            if (online && unsentPayload) {
-                for (const expediente of expedientesPormandar) {
-                    // addStudentId(expediente);
-                    console.log('exp: ', expediente);
-                    dispatch(removependingExpediente(expediente));
-                }
-            } 
         }
     };
 
@@ -36,6 +29,16 @@ export const MainScreen = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        if (online && unsentPayload) {
+            console.log('back online and sending payload: ', expedientesPormandar);
+            for (const expediente of expedientesPormandar) {
+                addStudentId(expediente);
+                dispatch(removependingExpediente(expediente));
+            }
+        }
+    }, [online, unsentPayload, expedientesPormandar]);
+
     return (
         <>
             <View style={styles.container}>
@@ -43,8 +46,8 @@ export const MainScreen = () => {
                 <CodeScanner />
 
                 {/* {(unSentPayload) ? <Text>{expedientesPormandar.length} : {unSentPayload.toString()}</Text> : <Text>Sin expedientes pendientesr</Text>} */}
-                
-                 <Text>{expedientesPormandar.length} : {unsentPayload.toString()}</Text>
+
+                <Text>{expedientesPormandar.length} : {unsentPayload.toString()}</Text>
 
                 <StatusBar style="auto" />
             </View>
