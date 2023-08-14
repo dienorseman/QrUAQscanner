@@ -1,33 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 
 import { StatusBar } from 'expo-status-bar';
 import { getNetworkStateAsync } from 'expo-network';
 
-import { useAppDispatch } from './store/store';
+import { useAppDispatch, useAppSelector } from './store/store';
 import { CodeScanner, NetworkStatus } from './components';
-import { switchOnline } from './store/qr/qrSlice';
+import { removependingExpediente, switchOnline } from './store/qr/qrSlice';
+import { addStudentId } from './helpers/addStudentId';
 
 export const MainScreen = () => {
 
     const dispatch = useAppDispatch();
 
+    const { unsentPayload, expedientesPormandar, online } = useAppSelector(state => state.qr);
+
     const checkNetworkStatus = async () => {
         let { isConnected } = await getNetworkStateAsync();
         if (typeof isConnected === 'boolean') {
-            dispatch(switchOnline( isConnected ));
+            dispatch(switchOnline(isConnected));
+            if (online && unsentPayload) {
+                for (const expediente of expedientesPormandar) {
+                    // addStudentId(expediente);
+                    console.log('exp: ', expediente);
+                    dispatch(removependingExpediente(expediente));
+                }
+            } 
         }
     };
 
     useEffect(() => {
-        // Ejecutar una vez al montar el componente
         checkNetworkStatus();
-
-        // Configurar intervalo para comprobar el estado de la red cada 1000 ms
-        const interval = setInterval(checkNetworkStatus, 1000);
-
-        // Limpiar el intervalo al desmontar el componente
+        const interval = setInterval(checkNetworkStatus, 500);
         return () => clearInterval(interval);
     }, []);
 
@@ -36,6 +41,11 @@ export const MainScreen = () => {
             <View style={styles.container}>
                 <NetworkStatus />
                 <CodeScanner />
+
+                {/* {(unSentPayload) ? <Text>{expedientesPormandar.length} : {unSentPayload.toString()}</Text> : <Text>Sin expedientes pendientesr</Text>} */}
+                
+                 <Text>{expedientesPormandar.length} : {unsentPayload.toString()}</Text>
+
                 <StatusBar style="auto" />
             </View>
         </>
