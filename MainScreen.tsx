@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-
 import { StatusBar } from 'expo-status-bar';
-import { getNetworkStateAsync } from 'expo-network';
+
+import NetInfo from '@react-native-community/netinfo';
 
 import { useAppDispatch, useAppSelector } from './store/store';
 import { CodeScanner, NetworkStatus } from './components';
@@ -16,18 +15,12 @@ export const MainScreen = () => {
 
     const { unsentPayload, expedientesPormandar, online } = useAppSelector(state => state.qr);
 
-    const checkNetworkStatus = async () => {
-        let { isConnected } = await getNetworkStateAsync();
-        if (typeof isConnected === 'boolean') {
-            dispatch(switchOnline(isConnected));
-        }
-    };
+
 
     useEffect(() => {
-        checkNetworkStatus();
-        const interval = setInterval(checkNetworkStatus, 500);
-        return () => clearInterval(interval);
-    }, []);
+        const hanldeNetworkChange = NetInfo.addEventListener(state => (state.isConnected !== null) ? dispatch(switchOnline(state.isConnected)) : undefined )
+        return  () => hanldeNetworkChange();
+    }, [dispatch]);
 
     useEffect(() => {
         if (online && unsentPayload) {

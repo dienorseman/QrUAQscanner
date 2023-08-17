@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface QrState {
-  online: null | boolean;
+  online: boolean | null;
   unsentPayload: boolean;
   expedientesPormandar: Array<string>;
 }
@@ -16,17 +16,17 @@ export const qrSlice = createSlice({
   name: "qr",
   initialState,
   reducers: {
-    switchOnline: (state, action: PayloadAction<boolean>) => {
+    switchOnline: ( state:QrState, action: PayloadAction<boolean> ) => {
       state.online = action.payload;
     },
-    addpendingExpediente: (state, action: PayloadAction<string>) => {
+    addpendingExpediente: ( state:QrState, action: PayloadAction<string> ) => {
       return {
         ...state,
         expedientesPormandar: [...state.expedientesPormandar, action.payload],
         unsentPayload: true,
       };
     },
-    removependingExpediente: (state, action: PayloadAction<string>) => {
+    removependingExpediente: ( state:QrState, action: PayloadAction<string> ) => {
       return {
         ...state,
         expedientesPormandar: state.expedientesPormandar.filter(
