@@ -15,16 +15,13 @@ export const MainScreen = () => {
 
     const { unsentPayload, expedientesPormandar, online } = useAppSelector(state => state.qr);
 
-
-
     useEffect(() => {
         const hanldeNetworkChange = NetInfo.addEventListener(state => (state.isConnected !== null) ? dispatch(switchOnline(state.isConnected)) : undefined )
         return  () => hanldeNetworkChange();
-    }, [dispatch]);
+    }, []);
 
     useEffect(() => {
         if (online && unsentPayload) {
-            console.log('back online and sending payload: ', expedientesPormandar);
             for (const expediente of expedientesPormandar) {
                 addStudentId(expediente);
                 dispatch(removependingExpediente(expediente));
