@@ -5,6 +5,8 @@ import { Button, View, Pressable, Text } from 'react-native';
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 import { addStudentId } from "../helpers/addStudentId";
+
+import { getSheetNames } from "../helpers/getSheetNames";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { addpendingExpediente } from "../store/qr/qrSlice";
 
@@ -89,6 +91,11 @@ export const CodeScanner = () => {
                 </Pressable>
                 <Pressable
                     onPress={() => {
+
+                        addStudentId(text);
+                        getSheetNames();
+                        setScanned( false );
+
 
                         if (!scanned) return;
                         if (online) {
