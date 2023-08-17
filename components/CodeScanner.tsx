@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Button, View, Pressable } from 'react-native';
 import { Text } from "react-native"
 import { addStudentId } from "../helpers/addStudentId";
+import { getSheetNames } from "../helpers/getSheetNames";
 
 export const CodeScanner = () => {
 
@@ -82,8 +83,9 @@ export const CodeScanner = () => {
                 </Pressable>
                 <Pressable 
                     onPress={() => {
-                        addStudentId();
-                        setScanned( false )
+                        addStudentId(text);
+                        getSheetNames();
+                        setScanned( false );
                         setText('sin escanear ...');
                     }} 
                     style={{borderColor: 'red', height: 50}}
