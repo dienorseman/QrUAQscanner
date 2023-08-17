@@ -1,41 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-
 import { StatusBar } from 'expo-status-bar';
-import { getNetworkStateAsync } from 'expo-network';
 
-import { useAppDispatch } from './store/store';
+import NetInfo from '@react-native-community/netinfo';
+
+import { useAppDispatch, useAppSelector } from './store/store';
 import { CodeScanner, NetworkStatus } from './components';
-import { switchOnline } from './store/qr/qrSlice';
+import { removependingExpediente, switchOnline } from './store/qr/qrSlice';
+import { addStudentId } from './helpers/addStudentId';
 
 export const MainScreen = () => {
 
     const dispatch = useAppDispatch();
 
-    const checkNetworkStatus = async () => {
-        let { isConnected } = await getNetworkStateAsync();
-        if (typeof isConnected === 'boolean') {
-            dispatch(switchOnline( isConnected ));
-        }
-    };
+    const { unsentPayload, expedientesPormandar, online } = useAppSelector(state => state.qr);
+
+
 
     useEffect(() => {
-        // Ejecutar una vez al montar el componente
-        checkNetworkStatus();
+        const hanldeNetworkChange = NetInfo.addEventListener(state => (state.isConnected !== null) ? dispatch(switchOnline(state.isConnected)) : undefined )
+        return  () => hanldeNetworkChange();
+    }, [dispatch]);
 
-        // Configurar intervalo para comprobar el estado de la red cada 1000 ms
-        const interval = setInterval(checkNetworkStatus, 1000);
-
-        // Limpiar el intervalo al desmontar el componente
-        return () => clearInterval(interval);
-    }, []);
+    useEffect(() => {
+        if (online && unsentPayload) {
+            console.log('back online and sending payload: ', expedientesPormandar);
+            for (const expediente of expedientesPormandar) {
+                addStudentId(expediente);
+                dispatch(removependingExpediente(expediente));
+            }
+        }
+    }, [online, unsentPayload, expedientesPormandar]);
 
     return (
         <>
             <View style={styles.container}>
                 <NetworkStatus />
                 <CodeScanner />
+
+                {/* {(unSentPayload) ? <Text>{expedientesPormandar.length} : {unSentPayload.toString()}</Text> : <Text>Sin expedientes pendientesr</Text>} */}
+
+                <Text>{expedientesPormandar.length} : {unsentPayload.toString()}</Text>
+
                 <StatusBar style="auto" />
             </View>
         </>

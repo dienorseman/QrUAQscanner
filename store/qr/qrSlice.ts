@@ -1,26 +1,42 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface QrState {
-  online: null | boolean;
-  unSentPayload: boolean;
-  expedientesPormandar: Array<number>;
+  online: boolean | null;
+  unsentPayload: boolean;
+  expedientesPormandar: Array<string>;
 }
 
 const initialState: QrState = {
   online: null,
-  unSentPayload: false,
-  expedientesPormandar: []
+  unsentPayload: false,
+  expedientesPormandar: [],
 };
 
 export const qrSlice = createSlice({
   name: "qr",
   initialState,
   reducers: {
-    switchOnline: (state, action: PayloadAction<boolean>) => {
+    switchOnline: ( state:QrState, action: PayloadAction<boolean> ) => {
       state.online = action.payload;
+    },
+    addpendingExpediente: ( state:QrState, action: PayloadAction<string> ) => {
+      return {
+        ...state,
+        expedientesPormandar: [...state.expedientesPormandar, action.payload],
+        unsentPayload: true,
+      };
+    },
+    removependingExpediente: ( state:QrState, action: PayloadAction<string> ) => {
+      return {
+        ...state,
+        expedientesPormandar: state.expedientesPormandar.filter(
+          (expediente) => expediente !== action.payload
+        ),
+        unsentPayload: state.expedientesPormandar.length > 0,
+      };
     },
   },
 });
 
-export const { switchOnline } = qrSlice.actions;
+export const { switchOnline, addpendingExpediente, removependingExpediente } = qrSlice.actions;
 export default qrSlice.reducer;

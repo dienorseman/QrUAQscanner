@@ -6,10 +6,6 @@ import { MainScreen } from './MainScreen';
 
 
 const App = () => {
-
-
-
-
   return (
     <Provider store={store}>
       <MainScreen />
