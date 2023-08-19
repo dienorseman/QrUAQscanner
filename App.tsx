@@ -1,12 +1,12 @@
 
 import { Provider } from 'react-redux';
-import { store } from './store/store';
-
 import { SafeAreaView } from 'react-native';
 
 import { ToastProvider } from 'react-native-toast-notifications';
+import { store } from './src/store/store';
+import { MainScreen } from './src/screens/MainScreen';
 
-import { MainScreen } from './MainScreen';
+
 
 
 

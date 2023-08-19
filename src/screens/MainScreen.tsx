@@ -1,44 +1,29 @@
-import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-import NetInfo from '@react-native-community/netinfo';
-
 //components
-import { CodeScanner, NetworkStatus, SpreadsheetSelector } from './components';
+import { CodeScanner, NetworkStatus, SpreadsheetSelector } from '../components';
 // redux 
-import { useAppDispatch, useAppSelector } from './store/store';
-import { removependingExpediente, switchOnline } from './store/qr/qrSlice';
+import { useAppSelector } from '../store/store';
 
-// helpers
-import { addStudentId, getSheetNames } from './helpers';
+
+// hooks
+import { useCheckNetwork } from '../hooks/useCheckNetwork';
+import { useUploadStudents } from '../hooks/useUploadStudents';
+import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
 
 export const MainScreen = () => {
 
-    const dispatch = useAppDispatch();
+    const {
+        expedientesPormandar,
+        currentSpreadsheetPage,
+    } = useAppSelector(state => state.qr);
 
-    const { unsentPayload, expedientesPormandar, online, currentSpreadsheetPage, spreadsheetPages } = useAppSelector(state => state.qr);
+    useCheckNetwork();
 
-    useEffect(() => {
-        const hanldeNetworkChange = NetInfo.addEventListener(state => (state.isConnected !== null) ? dispatch(switchOnline(state.isConnected)) : undefined)
-        return () => hanldeNetworkChange();
-    }, []);
+    useUploadStudents();
 
-    useEffect(() => {
-        if (online && unsentPayload) {
-            for (const expediente of expedientesPormandar) {
-                addStudentId(expediente, dispatch, currentSpreadsheetPage);
-                dispatch(removependingExpediente(expediente));
-            }
-        }
-    }, [online, unsentPayload, expedientesPormandar,]);
-
-    useEffect(() => {
-        const fetchSheetNames = async () => {
-            await getSheetNames(dispatch);
-        }
-        fetchSheetNames();
-    }, []);
+    useLoadSheetNames();
 
 
     return (
