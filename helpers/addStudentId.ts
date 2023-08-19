@@ -1,67 +1,35 @@
-import axios from "axios";
+import axios from 'axios';
 
-const sheets_id = "17GgGhd3K5inEx3JPk50Yboi3tv8AR6IOKCILlEoSbKo";
-const addUrl = "https://script.google.com/macros/s/AKfycbxn6CT_xQ4mnDub7ld1BX_1UT2xcbhmAy_tu-qvT5cbhuYj5w2rcwjxGU6ubMOcOeEc/exec";
-const getDataUrl = "https://script.google.com/macros/s/AKfycbxn6CT_xQ4mnDub7ld1BX_1UT2xcbhmAy_tu-qvT5cbhuYj5w2rcwjxGU6ubMOcOeEc/exec?spreadsheetId=" + sheets_id + "&sheets=names";
+import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
+import { store } from '../store/store';
 
 
-export const addStudentId = (text: string) => {
+const sheetsId = '17GgGhd3K5inEx3JPk50Yboi3tv8AR6IOKCILlEoSbKo';
+const addUrl =
+  'https://script.google.com/macros/s/AKfycbxn6CT_xQ4mnDub7ld1BX_1UT2xcbhmAy_tu-qvT5cbhuYj5w2rcwjxGU6ubMOcOeEc/exec';
+
+export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
+
+
   const requestData = {
-    spreadsheetId: sheets_id,
-    sheet: "Exp",
-    rows: [
-      [
-        text
-      ]
-    ]
+    spreadsheetId: sheetsId,
+    sheet: currentSpreadsheetPage,
+    rows: [[text]],
   };
 
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
 
-  axios.post(addUrl, requestData, { headers })
-    .then(res => {
-      console.log(res.data);
+  axios
+    .post(addUrl, requestData, { headers })
+    .then((res) => {
+      console.log(res.status);
+      dispatch(addTemporalStudentId(text));
     })
-    .catch(e => {
-      console.error("Error:", e);
+    .catch((e) => {
+      console.error('Error:', e);
+      dispatch(addpendingExpediente(text));
+      dispatch(addTemporalStudentId(text));
     });
 };
-
-
-/*
-export const addStudentId = () => {
-    console.log('add student');
-
-    axios.post('https://sheet.best/api/sheets/0fde9ba9-994f-4594-8f16-2f58b5234a40', {
-        'expediente': '2926443'
-    }, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => console.log(res))
-    .catch(e => console.log(e))
-
-
-
-}*/
-
-export const addStudentId = ( text: string ) => {
-
-
-    axios.post(
-        'https://sheet.best/api/sheets/0fde9ba9-994f-4594-8f16-2f58b5234a40', 
-        {
-            'expediente': text
-        }, 
-        {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    )
-    .then(res => console.log(res.data))
-    .catch(e => console.log(e));
-}

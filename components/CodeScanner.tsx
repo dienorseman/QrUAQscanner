@@ -1,19 +1,21 @@
 
 import { useEffect, useState } from "react"
-import { Button, View, Pressable, Text } from 'react-native';
+import { Button, View, Pressable, Text, Vibration } from 'react-native';
 
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useToast } from 'react-native-toast-notifications';
 
 import { addStudentId } from "../helpers/addStudentId";
-
-import { getSheetNames } from "../helpers/getSheetNames";
+import { clearTemporalStudentIds, selectSpreadsheetPage } from "../store/qr/qrSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addpendingExpediente } from "../store/qr/qrSlice";
+
 
 export const CodeScanner = () => {
 
-    const online = useAppSelector(state => state.qr.online);
+    const { currentSpreadsheetPage, temporalStundetIds } = useAppSelector(state => state.qr);
     const dispatch = useAppDispatch();
+
+    const toast = useToast();
 
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const [scanned, setScanned] = useState(false);
@@ -33,6 +35,23 @@ export const CodeScanner = () => {
         setScanned(true);
         setText(data);
         console.log(`Tipe: ${type}, Data: ${data}`);
+        if (temporalStundetIds.includes(data)) {
+            toast.show('Ya se ha agregado este estudiante', { type: 'warning', placement: 'top', style: { marginTop: 80 }, duration: 2999});
+            setTimeout(() => {
+                setText('sin escanear');
+                setScanned(false);
+            }, 3000);
+        
+            return;
+        }
+
+        addStudentId(data, dispatch, currentSpreadsheetPage);
+        toast.show('Se ha agregado un estudiante', { type: 'success', placement: 'top', style: { marginTop: 80 }, duration: 2999 });
+        Vibration.vibrate(600, false);
+        setTimeout(() => {
+            setText('sin escanear');
+            setScanned(false);
+        }, 3000);
     }
 
     useEffect(() => {
@@ -80,36 +99,12 @@ export const CodeScanner = () => {
                     marginTop: 24
                 }}
             >
-                <Pressable
-                    onPress={() => {
-                        setScanned(false);
-                        setText('Sin escanear ...');
-                    }}
-                    style={{ borderColor: 'red', height: 50 }}
-                >
-                    <Text style={{ color: '#e97451' }}>Volver a escanear</Text>
-                </Pressable>
-                <Pressable
-                    onPress={() => {
-
-                        addStudentId(text);
-                        getSheetNames();
-                        setScanned( false );
-
-
-                        if (!scanned) return;
-                        if (online) {
-                            addStudentId(text);
-                        } else {
-                            dispatch(addpendingExpediente(text));
-                        }
-                        setScanned(false)
-                        setText('sin escanear ...');
-                    }}
-                    style={{ borderColor: 'red', height: 50 }}
-                >
-                    <Text style={{ color: '#001eff' }}>Validar Entrada</Text>
-                </Pressable>
+                <Button title="Cambiar evento" onPress={
+                    () => {
+                        dispatch(selectSpreadsheetPage(''));
+                        dispatch(clearTemporalStudentIds());
+                    }
+                } />
             </View>
 
         </>
