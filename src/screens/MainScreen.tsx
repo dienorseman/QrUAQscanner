@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 //components
-import { CodeScanner, NetworkStatus, SpreadsheetSelector } from '../components';
+import { CodeScanner, SpreadsheetSelector } from '../components';
 // redux 
 import { useAppSelector } from '../store/store';
 
@@ -11,11 +11,11 @@ import { useAppSelector } from '../store/store';
 import { useCheckNetwork } from '../hooks/useCheckNetwork';
 import { useUploadStudents } from '../hooks/useUploadStudents';
 import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
+import { Tittle } from '../components/Tittle';
 
 export const MainScreen = () => {
 
     const {
-        expedientesPormandar,
         currentSpreadsheetPage,
     } = useAppSelector(state => state.qr);
 
@@ -25,26 +25,21 @@ export const MainScreen = () => {
 
     useLoadSheetNames();
 
-
     return (
         <>
             <View style={styles.container}>
-                <NetworkStatus />
                 {
                     (currentSpreadsheetPage !== '')
                         ? <>
-                            <Text>Evento: {currentSpreadsheetPage}</Text>
                             <CodeScanner />
                         </>
-                        : <SpreadsheetSelector />
+
+                        : (<>
+                            <SafeAreaView />
+                            <Tittle />
+                            <SpreadsheetSelector />
+                        </>)
                 }
-                <View style={styles.floatingStudentIdCounterContainer} >
-                    <Text
-                        style={styles.floatingStudentIdCounter}
-                    >{expedientesPormandar.length} </Text>
-                </View>
-
-
                 <StatusBar style="auto" />
             </View>
         </>
@@ -57,7 +52,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     floatingStudentIdCounterContainer: {
         position: 'absolute',
