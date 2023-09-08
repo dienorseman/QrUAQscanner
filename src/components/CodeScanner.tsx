@@ -1,19 +1,22 @@
 
 import { useEffect, useState } from "react"
-import { Button, View, Text, Vibration, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { Button, View, Text, Vibration, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Dimensions } from 'react-native';
 
-import MaskedView from "@react-native-masked-view/masked-view";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useToast } from 'react-native-toast-notifications';
+import Svg, { G, Path, Rect, Defs, Circle, Mask } from "react-native-svg";
 
 import { addStudentId } from "../helpers/addStudentId";
 import { clearTemporalStudentIds, selectSpreadsheetPage } from "../store/qr/qrSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
-
+const HEIGHT = Dimensions.get('window').height;
+const WIDTH = Dimensions.get('window').width;
 
 
 export const CodeScanner = () => {
+
+
 
     const { currentSpreadsheetPage, temporalStundetIds, online } = useAppSelector(state => state.qr);
     const dispatch = useAppDispatch();
@@ -65,8 +68,12 @@ export const CodeScanner = () => {
     }
 
     useEffect(() => {
-        askForCamPermission()
+        askForCamPermission();
     }, [])
+
+    useEffect(() => {
+        console.log(HEIGHT, WIDTH);
+    }, [HEIGHT, WIDTH])
 
     if (hasPermission === null) {
         return (
@@ -85,110 +92,105 @@ export const CodeScanner = () => {
 
     return (
         <>
-            <StatusBar
-                barStyle={'light-content'}
+            <SafeAreaView
 
             />
             <BarCodeScanner
-                style={{
-                    position: 'absolute',
-                    flex: 1,
-                    height: '100%',
-                    width: '100%',
-                    zIndex: -2,
-                }}
+                style={styles.container}
                 onBarCodeScanned={scanned ? undefined : handleScan}
             />
-            <SafeAreaView />
-            <View
-                style={styles.floatingMenuContainer}
-            >
-                <TouchableOpacity
-                    style={styles.backBtn}
-                    onPress={
-                        () => {
-                            dispatch(selectSpreadsheetPage(''));
-                            dispatch(clearTemporalStudentIds());
+            <Svg width="100%" height="100%">
+                <Defs>
+                    <Mask id="mask" x="0" y="0" width="100%" height="100%">
+                        <Rect width="100%" height="100%" fill="#fff" />
+                        <Rect
+                            x={`${WIDTH * .1}`}
+                            y={`${HEIGHT * .3}`}
+                            width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="black" />
+                    </Mask>
+                </Defs>
+                <Rect width="100%" height="100%" fill="rgba(0,0,0,0.44)" mask="url(#mask)" />
+                <Rect
+                    x={`${WIDTH * .1}`}
+                    y={`${HEIGHT * .3}`}
+                    width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="transparent" stroke="white" strokeWidth="2" />
+                <G>
+                    <Rect
+                        x={`${WIDTH * .1}`}
+                        y={`${HEIGHT * .3}`}
+                        width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="transparent" stroke="white" strokeWidth="2" />
+                </G>
+
+            </Svg>
+
+            <View style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                zIndex: 20,
+
+            }}>
+                <View
+                    style={styles.floatingMenuContainer}
+                >
+                    <TouchableOpacity
+                        style={styles.backBtn}
+                        onPress={
+                            () => {
+                                dispatch(selectSpreadsheetPage(''));
+                                dispatch(clearTemporalStudentIds());
+                            }
                         }
-                    }
-                >
-                    <Image style={styles.backIcon} source={require('../../assets/back-white.png')} />
-                </TouchableOpacity>
+                    >
+                        <Image style={styles.backIcon} source={require('../../assets/back-white.png')} />
+                    </TouchableOpacity>
 
-                <View style={styles.eventInfoContainer}>
-                    <Text style={{ color: 'white' }}>Evento</Text>
-                    <Text style={{ color: 'white' }}>{currentSpreadsheetPage}</Text>
+                    <View style={styles.eventInfoContainer}>
+                        <Text style={{ color: 'white' }}>Evento</Text>
+                        <Text style={{ color: 'white', marginTop: 20, fontSize: 20 }}>{currentSpreadsheetPage}</Text>
+                    </View>
+
+                    <View style={styles.onlineStatusContainer}>
+                        <Image
+                            style={styles.onlineStatusIcon}
+                            source={online ? require('../../assets/wifi-white.png') : require('../../assets/offline.png')}
+                        />
+                    </View>
                 </View>
-
-                <View style={styles.onlineStatusContainer}>
-                    <Image
-                        style={styles.onlineStatusIcon}
-                        source={online ? require('../../assets/wifi-white.png') : require('../../assets/offline.png')}
-                    />
+                <View style={styles.textScan}>
+                    <Text style={{ color: 'white', fontSize: 16, textAlign: 'center'}}>{text}</Text>
                 </View>
-
-
+            
             </View>
-            <View
-                style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: -1,
-                }}
-            >
-                <MaskedView
-                    style={{ flex: 1, flexDirection: 'row', height: '100%', width: '100%' }}
-                    maskElement={
-                        <View
-                            style={{
-    
-                                backgroundColor: 'transparent',
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-
-                        >
-                            <Text style={{ fontSize: 60, color: 'white', fontWeight: 'bold' }}>
-                                {text}
-                            </Text>
-                        </View>
-                    }
-                >
-                    <View style={{ flex: 1, height: '100%', backgroundColor: 'transparent' }} />
-                    
-                </MaskedView>
-            </View>
-
-
         </>
+
+
     )
 }
 
 
 const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        width: '100%',
+        flex: 1,
+        zIndex: -1,
+        position: 'absolute',
+    },
     floatingMenuContainer: {
         width: '100%',
         flexDirection: 'row',
-        borderWidth: 1,
-        borderColor: 'blue',
         borderRadius: 10,
         marginTop: 20,
         padding: 10,
+        paddingHorizontal: 24,
+        top: `20%`,
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-
-
-
     backBtn: {
-        width: 50,
-        height: 50,
+        width: 33,
+        height: 33,
         borderRadius: 10,
         borderColor: 'white',
         borderWidth: 1,
@@ -197,34 +199,36 @@ const styles = StyleSheet.create({
     },
 
     backIcon: {
-        width: 20,
-        height: 20,
+        width: 16,
+        height: 16,
         resizeMode: 'contain'
     },
     eventInfoContainer: {
         width: '50%',
         height: 60,
-        borderColor: 'blue',
-        borderWidth: 1,
         color: 'white',
         justifyContent: 'center',
         alignItems: 'center',
     },
 
     onlineStatusContainer: {
-        width: 50,
-        height: 50,
+        width: 33,
+        height: 33,
         borderRadius: 10,
         borderColor: 'white',
         borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     onlineStatusIcon: {
-        width: 30,
-        height: 30,
+        width: 16,
+        height: 16,
         marginBottom: 4,
         resizeMode: 'contain'
-    }
+    },
+
+    textScan: {
+        textAlign: 'center',
+        top: `20%`,
+    },
 })

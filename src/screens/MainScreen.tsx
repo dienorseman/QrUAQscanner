@@ -12,6 +12,7 @@ import { useCheckNetwork } from '../hooks/useCheckNetwork';
 import { useUploadStudents } from '../hooks/useUploadStudents';
 import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
 import { Tittle } from '../components/Tittle';
+import { MaskComponent } from '../components/MaskComponent';
 
 export const MainScreen = () => {
 
@@ -32,6 +33,7 @@ export const MainScreen = () => {
                     (currentSpreadsheetPage !== '')
                         ? <>
                             <CodeScanner />
+                            {/* <MaskComponent /> */}
                         </>
 
                         : (<>
