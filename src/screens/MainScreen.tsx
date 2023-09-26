@@ -28,7 +28,7 @@ export const MainScreen = () => {
 
     return (
         <>
-            <View style={styles.container}>
+
                 {
                     (currentSpreadsheetPage !== '')
                         ? <>
@@ -43,7 +43,7 @@ export const MainScreen = () => {
                         </>)
                 }
                 <StatusBar style="auto" />
-            </View>
+
         </>
     )
 }
