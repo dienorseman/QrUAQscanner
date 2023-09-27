@@ -7,6 +7,7 @@ export interface QrState {
   temporalStundetIds: Array<string>;
   currentSpreadsheetPage: string;
   spreadsheetPages: Array<string>;
+  loading: boolean;
 }
 
 const initialState: QrState = {
@@ -16,6 +17,7 @@ const initialState: QrState = {
   currentSpreadsheetPage: '',
   temporalStundetIds: [],
   spreadsheetPages: [],
+  loading: false,
 };
 
 export const qrSlice = createSlice({
@@ -70,7 +72,13 @@ export const qrSlice = createSlice({
         ...state,
         spreadsheetPages: action.payload,
       };
-    }
+    },
+    setLoading: (state: QrState, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    },
   },
 
 });
@@ -83,5 +91,6 @@ export const {
   addTemporalStudentId,
   clearTemporalStudentIds,
   setSpreadsheetPages,
+  setLoading
 } = qrSlice.actions;
 export default qrSlice.reducer;

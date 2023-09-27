@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { selectSpreadsheetPage } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
+import { getSheetNames } from '../helpers';
+import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
 
 
 type ItemProps = {
@@ -35,9 +37,11 @@ export const SpreadsheetSelector = () => {
 
     const [selectedId, setSelectedId] = useState<string>();
 
-    const { spreadsheetPages } = useAppSelector(state => state.qr);
+    const { spreadsheetPages, loading } = useAppSelector(state => state.qr);
 
     const dispatch = useAppDispatch();
+    
+   const {fetchSheetNames} = useLoadSheetNames();
 
     useEffect(() => {
 
@@ -63,12 +67,18 @@ export const SpreadsheetSelector = () => {
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={spreadsheetPages}
-                renderItem={renderItem}
-                keyExtractor={(item) => item}
-                extraData={selectedId}
-            />
+
+            {
+                (loading) ?
+                    <Text>Loading...</Text> :
+                    <FlatList
+                        onMomentumScrollEnd={fetchSheetNames}
+                        data={spreadsheetPages}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item}
+                        extraData={selectedId}
+                    />
+            }
         </View>
     )
 }
@@ -94,7 +104,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: '600',
     },
-    
+
     button: {
         alignItems: "center",
         borderColor: '#CCCCCC',

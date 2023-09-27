@@ -3,11 +3,16 @@ import { getSheetNames } from '../helpers';
 import { useAppDispatch } from '../store/store';
 
 export const useLoadSheetNames = () => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
+    const dispatch = useAppDispatch();
+
     const fetchSheetNames = async () => {
-      await getSheetNames(dispatch);
+        await getSheetNames(dispatch);
     };
-    fetchSheetNames();
-  }, []);
+    useEffect(() => {
+        fetchSheetNames();
+    }, []);
+
+    return {
+        fetchSheetNames,
+    }
 };

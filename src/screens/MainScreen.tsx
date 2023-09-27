@@ -10,7 +10,8 @@ import { useAppSelector } from '../store/store';
 // hooks
 import { useCheckNetwork } from '../hooks/useCheckNetwork';
 import { useUploadStudents } from '../hooks/useUploadStudents';
-import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
+
+//components
 import { Tittle } from '../components/Tittle';
 import { MaskComponent } from '../components/MaskComponent';
 
@@ -24,7 +25,7 @@ export const MainScreen = () => {
 
     useUploadStudents();
 
-    useLoadSheetNames();
+
 
     return (
         <>
