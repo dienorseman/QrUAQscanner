@@ -42,9 +42,14 @@ export const CodeScanner = () => {
 
     const handleScan = ({ data, type }: scanTypes) => {
         setScanned(true);
-        setText(data);
         console.log(`Tipe: ${type}, Data: ${data}`);
-        if (temporalStundetIds.includes(data)) {
+        const validID = /^[1-9]+[0-9]{0,6}$/;
+        if (!validID.test(data)||data.length>7){
+            console.log('no valido');
+            setScanned(false)
+            return
+        }
+        if (temporalStundetIds.includes(data)) {        
             toast.show('Ya se ha agregado este estudiante', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
             setTimeout(() => {
                 setText(
@@ -93,7 +98,7 @@ export const CodeScanner = () => {
     return (
         <>
             <SafeAreaView
-
+                style={{flex: 1}}
             />
             <BarCodeScanner
                 style={styles.container}
