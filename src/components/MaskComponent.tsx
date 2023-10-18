@@ -53,7 +53,7 @@ export const MaskComponent = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    /*container: {
         position: 'absolute',
         flex: 1,
         height: '100%',
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'blue',
         borderRadius: 10,
-        marginTop: 20,
+        marginTop: 10,
         padding: 10,
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         width: 33,
         height: 33,
         borderRadius: 10,
-        borderColor: 'white',
+        borderColor: 'red',
         borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -110,7 +110,60 @@ const styles = StyleSheet.create({
         height: 16,
         marginBottom: 4,
         resizeMode: 'contain'
-    }
-
-
+    }*/
+    container: {
+        flex: 1,
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'transparent',
+    },
+    floatingMenuContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        //borderWidth: 1,
+        borderColor: 'blue',
+        borderRadius: 10,
+        marginTop: '1%',
+        padding: '1%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    backBtn: {
+        width: '10%',
+        height: '10%',
+        borderRadius: 10,
+        borderColor: 'white',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    backIcon: {
+        width: '5%',
+        height: '5%',
+        resizeMode: 'contain'
+    },
+    eventInfoContainer: {
+        width: '50%',
+        height: '15%',
+        borderColor: 'blue',
+        //borderWidth: 1,
+        color: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    onlineStatusContainer: {
+        width: '10%',
+        height: '10%',
+        borderRadius: 10,
+        borderColor: 'red',
+        //borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    onlineStatusIcon:{
+       width:'5%', 
+       height:'5%', 
+       marginBottom:'1%', 
+       resizeMode:'contain'
+   }
 });
