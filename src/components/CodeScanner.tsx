@@ -15,9 +15,6 @@ const WIDTH = Dimensions.get('window').width;
 
 
 export const CodeScanner = () => {
-
-
-
     const { currentSpreadsheetPage, temporalStundetIds, online } = useAppSelector(state => state.qr);
     const dispatch = useAppDispatch();
 
@@ -29,6 +26,12 @@ export const CodeScanner = () => {
     const textDefault = 'Escanea para registrar';
 
     const [text, setText] = useState(textDefault);
+
+    //Mask component position and height - Posición y tamaño del cuadrado blanco del scanner.
+    const posx = `${WIDTH * .1}`;
+    const posy = `${HEIGHT * .4}`;
+    const width = `${WIDTH * .8}`;
+    const height = `${HEIGHT * .4}`;
 
     const askForCamPermission = async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -94,40 +97,40 @@ export const CodeScanner = () => {
             </>
         )
     }
-
+    
     return (
         <>
             <SafeAreaView
-                style={{flex: 1}}
+                style={{flex: 1,}}
             />
             <BarCodeScanner
                 style={styles.container}
                 onBarCodeScanned={scanned ? undefined : handleScan}
             />
             <Svg width="100%" height="100%">
-                <Defs>
-                    <Mask id="mask" x="0" y="0" width="100%" height="100%">
-                        <Rect width="100%" height="100%" fill="#fff" />
-                        <Rect
-                            x={`${WIDTH * .1}`}
-                            y={`${HEIGHT * .3}`}
-                            width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="black" />
-                    </Mask>
-                </Defs>
-                <Rect width="100%" height="100%" fill="rgba(0,0,0,0.44)" mask="url(#mask)" />
-                <Rect
-                    x={`${WIDTH * .1}`}
-                    y={`${HEIGHT * .3}`}
-                    width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="transparent" stroke="white" strokeWidth="2" />
-                <G>
-                    <Rect
-                        x={`${WIDTH * .1}`}
-                        y={`${HEIGHT * .3}`}
-                        width={`${WIDTH * .8}`} height={`${HEIGHT * .4}`} fill="transparent" stroke="white" strokeWidth="2" />
-                </G>
+                    {/*Mascará del Scanner*/}
+                    <Defs>
+                        <Mask id="mask" x="0" y="0" width="100%" height="100%">
+                            <Rect width="100%" height="100%" fill="#fff" />
+                            <Rect x={posx} y={posy} width={width} height={height} fill="black" />
+                        </Mask>
+                    </Defs>
+                    {/*Fin de la mascará*/}
 
+                    <Rect width="100%" height="100%" fill="rgba(0,0,0,0.44)" mask="url(#mask)" />
+                    
+                    {/*Modifies the color inside and the border of the scanner - Modifica el color de fondo y linea del scanner*/}
+                    {<Rect x={posx} y={posy} width={width} height={height} fill="transparent" stroke="white" strokeWidth="2" />}
+                    <G>
+                        <Rect x={posx} y={posy} width={width} height={height} fill="transparent" stroke="white" strokeWidth="2" />
+                    </G>
+                    {/*Fin cuadrito del scanner*/}
             </Svg>
-
+            {/*Style view for the floating menu container.
+               Will change the bottons size and position
+               ------------------------------------------
+               Vista de estilo del menú flotante que controla
+               los botones y etiquetas del scanner*/}
             <View style={{
                 width: '100%',
                 height: '100%',
@@ -173,11 +176,10 @@ export const CodeScanner = () => {
     )
 }
 
-
-const styles = StyleSheet.create({
+/*const styles = StyleSheet.create({
     container: {
         height: '100%',
-        width: '100%',
+        width: '123%',
         flex: 1,
         zIndex: -1,
         position: 'absolute',
@@ -235,5 +237,76 @@ const styles = StyleSheet.create({
     textScan: {
         textAlign: 'center',
         top: `20%`,
+    },
+})*/
+const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        width: '200%',
+        alignSelf: 'center',
+        flex: 1,
+        zIndex: -1,
+        position: 'absolute',
+    },
+    floatingMenuContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        borderRadius: 10,
+        marginTop: -30,
+        padding: 0,
+        paddingHorizontal: 24,
+        top: '20%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    backBtn: {
+        width: '10%',
+        height: '28%',
+        borderRadius: 10,
+        borderColor: 'white',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    backIcon: {
+        width: '50%',
+        height: 16,
+        resizeMode: 'contain'
+    },
+    eventInfoContainer: {
+        width: '50%',
+        height: 60,
+        color: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    onlineStatusContainer: {
+        width: '10%',
+        height: '28%',
+        borderRadius: 10,
+        borderColor: 'white',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    onlineStatusIcon: {
+        width: '50%',
+        height: 16,
+        marginBottom: 4,
+        resizeMode: 'contain'
+    },
+
+    textScan: {
+        textAlign: 'center',
+        top: '20%',
+    },
+    mainScan: {
+        alignContent: 'center',
+        justifyContent: 'space-around',
+        border: 1,
+        //borderWidth: 5,
+        borderColor: 'red',
     },
 })

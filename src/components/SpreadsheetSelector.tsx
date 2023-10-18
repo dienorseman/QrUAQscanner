@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
 
 import { selectSpreadsheetPage } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
@@ -19,7 +19,19 @@ type ItemProps = {
 const Item = ({ item, onPress, style }: ItemProps) => {
 
     return (
-        <View style={[styles.item, { backgroundColor: style.backgroundColor }]}>
+        //Contenedor de la lista de eventos.
+       <View style={styles.lista}>
+            <View style={[styles.item, { backgroundColor: style.backgroundColor }]}>
+                <Text style={[styles.title, { color: style.textColor }]}>{item}</Text>
+                <TouchableOpacity style={[styles.button]} onPress={onPress}>
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../../assets/next.png')}
+                    />
+                </TouchableOpacity>
+            </View>
+        </View>
+        /*<View style={[styles.item, { backgroundColor: style.backgroundColor }]}>
             <Text style={[styles.title, { color: style.textColor }]}>{item}</Text>
             <TouchableOpacity style={[styles.button]} onPress={onPress}>
                 <Image
@@ -27,7 +39,7 @@ const Item = ({ item, onPress, style }: ItemProps) => {
                     source={require('../../assets/next.png')}
                 />
             </TouchableOpacity>
-        </View>
+        </View>*/
 
     )
 }
@@ -83,22 +95,36 @@ export const SpreadsheetSelector = () => {
     )
 }
 
+//Contenedor principal para la lista de elementos
 const styles = StyleSheet.create({
     container: {
         marginTop: 10,
+        border: 1,
+        //borderWidth: 5,
+        borderColor: 'red',
         width: '100%',
+        height: '100%',
+    },
+
+    //Style para la lista de elementos
+    lista: {
+        border: 1,
+        //borderWidth: 5,
+        borderColor: 'purple',
+        alignItems: 'center',
     },
 
     item: {
         padding: 20,
         marginVertical: 8,
-        marginHorizontal: 40,
+        marginHorizontal: 0,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#CCCCCC',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: '95%',
     },
     title: {
         fontSize: 22,

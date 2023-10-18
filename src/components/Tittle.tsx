@@ -34,7 +34,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        marginTop: 20,
+        marginTop: '15%',
+        marginLeft: '5%',
+        border: 1,
+        //borderWidth: 5,
+        borderColor: 'red',
+        position: 'relative',
     },
     header: {
         fontSize: 24,

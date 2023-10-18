@@ -28,9 +28,13 @@ export const MainScreen = () => {
 
 
     return (
+        /*
+        * Container. SafeAreaView is the main view to contain the others.
+        * Container. SafeAreaView es la vista padre, aquella que se encarga de contener las demás vistas.
+        */
         <>
-
                 {
+                
                     (currentSpreadsheetPage !== '')
                         ? <>
                             <CodeScanner />
@@ -43,19 +47,25 @@ export const MainScreen = () => {
                             <SpreadsheetSelector />
                         </>)
                 }
-                <StatusBar style="auto" />
-
+            <StatusBar style="auto" />
         </>
     )
 }
 
 
 const styles = StyleSheet.create({
+    //Main Container - Contenedor Principal
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#ffff',
+        alignItems: 'flex-start',
         justifyContent: 'flex-start',
+        border: 1,
+        //borderWidth: 5,
+        borderColor: 'red',
     },
     floatingStudentIdCounterContainer: {
         position: 'absolute',
