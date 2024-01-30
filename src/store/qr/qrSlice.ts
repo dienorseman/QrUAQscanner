@@ -99,4 +99,5 @@ export const {
   setSpreadsheetPages,
   setLoading
 } = qrSlice.actions;
+
 export default qrSlice.reducer;
