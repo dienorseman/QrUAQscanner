@@ -2,10 +2,11 @@ import axios from 'axios';
 import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
 
-const sheetsId = '1ZS1HsrNPJF2l8DIxVM6_6aQJ8E6iEXlR0tbN3teKiUE';
-const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
-
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
+
+  const sheetsId = store.getState().qr.sheetsId;
+  const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
+
   const requestData = {
     spreadsheetId: sheetsId,
     sheet: currentSpreadsheetPage,
