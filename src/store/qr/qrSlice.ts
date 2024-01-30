@@ -8,9 +8,11 @@ export interface QrState {
   currentSpreadsheetPage: string;
   spreadsheetPages: Array<string>;
   loading: boolean;
+  sheetsId: string;
 }
 
 const initialState: QrState = {
+  sheetsId: '',
   online: null,
   unsentPayload: false,
   expedientesPormandar: [],
@@ -24,6 +26,9 @@ export const qrSlice = createSlice({
   name: 'qr',
   initialState,
   reducers: {
+    setSheetsId: (state, action) => {
+      state.sheetsId = action.payload; // Añade este reductor para manejar la actualización del ID de la hoja de cálculo
+    },
     switchOnline: (state: QrState, action: PayloadAction<boolean>) => {
       return {
         ...state,
@@ -84,6 +89,7 @@ export const qrSlice = createSlice({
 });
 
 export const {
+  setSheetsId,
   switchOnline,
   addpendingExpediente,
   removependingExpediente,
