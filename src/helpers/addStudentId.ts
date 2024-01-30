@@ -1,35 +1,48 @@
 import axios from 'axios';
-
 import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
 
-
-const sheetsId = '17GgGhd3K5inEx3JPk50Yboi3tv8AR6IOKCILlEoSbKo';
-const addUrl =
-  'https://script.google.com/macros/s/AKfycbxn6CT_xQ4mnDub7ld1BX_1UT2xcbhmAy_tu-qvT5cbhuYj5w2rcwjxGU6ubMOcOeEc/exec';
+const sheetsId = '1ZS1HsrNPJF2l8DIxVM6_6aQJ8E6iEXlR0tbN3teKiUE';
+const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
-
-
   const requestData = {
     spreadsheetId: sheetsId,
     sheet: currentSpreadsheetPage,
     rows: [[text]],
   };
 
+  const readUrl = `${addUrl}?spreadsheetId=${sheetsId}&sheets=expedientes&sheetName=${currentSpreadsheetPage}`;
+
   const headers = {
     'Content-Type': 'application/json',
   };
 
-  axios
-    .post(addUrl, requestData, { headers })
+  axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
-      console.log(res.status);
-      dispatch(addTemporalStudentId(text));
+      // console.log(res.data);
+      if (res.data && res.data.expedientes) {
+        const expedientes = res.data.expedientes; // asumiendo que res.data.expedientes es una lista de expedientes
+        if (expedientes.includes(text)) {
+          console.log("Ya se registró ese expediente anteriormente");
+        } else {
+          axios.post(addUrl, requestData, { headers }) // Agregar el nuevo expediente solo si no existe
+            .then((res) => {
+              console.log(res.status);
+              dispatch(addTemporalStudentId(text));
+            })
+            .catch((e) => {
+              console.error('Error:', e);
+              dispatch(addpendingExpediente(text));
+              dispatch(addTemporalStudentId(text));
+            });
+        }
+      } else {
+        console.error('Error: La respuesta de la API no contiene expedientes');
+      }
     })
     .catch((e) => {
       console.error('Error:', e);
-      dispatch(addpendingExpediente(text));
-      dispatch(addTemporalStudentId(text));
     });
 };
+
