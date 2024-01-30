@@ -44,11 +44,11 @@ export const MainScreen = () => {
                                 <SafeAreaView />
                                 <Tittle />
                                 <SpreadsheetSelector />
+                                <View style={styles.buttonContainer}>
+                                    <Button title="Regresar" onPress={() => setIsSheetAdded(false)} color="#800080" />
+                                </View>
                             </>)
                     }
-                    <View style={styles.buttonContainer}>
-                        <Button title="Regresar" onPress={() => setIsSheetAdded(false)} color="#800080" />
-                    </View>
                     <StatusBar style="auto" />
                 </>
             )}
