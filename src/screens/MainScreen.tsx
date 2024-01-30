@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 //components
-import { CodeScanner, SpreadsheetSelector } from '../components';
+import { CodeScanner, SpreadsheetSelector, AddGoogleSheets } from '../components';
 // redux 
 import { useAppSelector } from '../store/store';
 
@@ -16,6 +17,7 @@ import { Tittle } from '../components/Tittle';
 import { MaskComponent } from '../components/MaskComponent';
 
 export const MainScreen = () => {
+    const [isSheetAdded, setIsSheetAdded] = useState(false);
 
     const {
         currentSpreadsheetPage,
@@ -25,32 +27,36 @@ export const MainScreen = () => {
 
     useUploadStudents();
 
-
-
     return (
-        /*
-        * Container. SafeAreaView is the main view to contain the others.
-        * Container. SafeAreaView es la vista padre, aquella que se encarga de contener las demás vistas.
-        */
         <>
-                {
-                
-                    (currentSpreadsheetPage !== '')
-                        ? <>
-                            <CodeScanner />
-                            {/* <MaskComponent /> */}
-                        </>
+            {!isSheetAdded ? (
+                <AddGoogleSheets onAdd={() => setIsSheetAdded(true)} />
+            ) : (
+                <>
+                    {
+                        (currentSpreadsheetPage !== '')
+                            ? <>
+                                <CodeScanner />
+                                {/* <MaskComponent /> */}
+                            </>
 
-                        : (<>
-                            <SafeAreaView />
-                            <Tittle />
-                            <SpreadsheetSelector />
-                        </>)
-                }
-            <StatusBar style="auto" />
+                            : (<>
+                                <SafeAreaView />
+                                <Tittle />
+                                <SpreadsheetSelector />
+                            </>)
+                    }
+                    <View style={styles.buttonContainer}>
+                        <Button title="Regresar" onPress={() => setIsSheetAdded(false)} color="#800080" />
+                    </View>
+                    <StatusBar style="auto" />
+                </>
+            )}
         </>
     )
 }
+
+
 
 
 const styles = StyleSheet.create({
@@ -82,5 +88,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         textAlign: 'center',
+    },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        margin: 16,
     }
 });

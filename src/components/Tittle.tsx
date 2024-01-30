@@ -23,8 +23,8 @@ export const Tittle = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Semana Academica y Cultural</Text>
-            <Text style={styles.date}>{weekDay} {day}, {month}</Text>
+            <Text style={styles.header}>Gestión de Asistencias</Text>
+            <Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text>
         </View>
     )
 }
