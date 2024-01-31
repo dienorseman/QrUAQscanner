@@ -4,23 +4,33 @@ import { Picker } from '@react-native-picker/picker';
 
 import { selectSpreadsheetPage } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { getSheetNames } from '../helpers';
 import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
+import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export const SpreadsheetSelector = () => {
 
     const [selectedId, setSelectedId] = useState<string>();
     const [showPicker, setShowPicker] = useState(false); // Nuevo estado para mostrar u ocultar el Picker
 
-    const { spreadsheetPages, loading } = useAppSelector(state => state.qr);
+    const { spreadsheetPages, loading, columnAData } = useAppSelector(state => state.qr);
 
     const dispatch = useAppDispatch();
     
-    const {fetchSheetNames} = useLoadSheetNames();
+    //const {fetchSheetNames} = useLoadSheetNames();
+
+    //const {fetchSheetData} = useLoadColumnAData();
 
     useEffect(() => {
 
     }, [spreadsheetPages])
+
+    useEffect(() => {
+
+    }, [columnAData])
 
     return (
         <View style={styles.container}>
@@ -61,6 +71,15 @@ export const SpreadsheetSelector = () => {
                         )}
                     </View>
             }
+            <View>
+                {selectedId && (
+                    <FlatList
+                        data={columnAData}
+                        renderItem={({ item }) => <Text style={styles.listItem}>{item}</Text>}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                )}
+            </View>
         </View>
     )
 }
@@ -132,5 +151,15 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         objectFit: 'cover',
+    },
+
+    listItem: {
+        fontSize: windowWidth * 0.04, // 4% del ancho de la ventana
+        color: '#841584',
+        textAlign: 'center',
+        marginBottom: windowHeight * 0.01, // 1% de la altura de la ventana
+        backgroundColor: '#f8f8f8',
+        padding: windowHeight * 0.01, // 1% de la altura de la ventana
+        borderRadius: 5,
     },
 });

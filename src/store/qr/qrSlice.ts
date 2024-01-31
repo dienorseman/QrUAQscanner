@@ -9,7 +9,8 @@ export interface QrState {
   spreadsheetPages: Array<string>;
   loading: boolean;
   sheetsId: string;
-  sheetsTitle: string,
+  sheetsTitle: string;
+  columnAData: Array<string>;
 }
 
 const initialState: QrState = {
@@ -22,12 +23,20 @@ const initialState: QrState = {
   spreadsheetPages: [],
   loading: false,
   sheetsTitle: '',
+  columnAData: [],
 };
 
 export const qrSlice = createSlice({
   name: 'qr',
   initialState,
   reducers: {
+    setColumnAData: (state: QrState, action: PayloadAction<string>) => {
+      return{
+        ...state,
+        columnAData: [...state.columnAData, action.payload],
+        unsentPayload: true,
+      };
+    },
     setSheetsTitle: (state, action) => {
       state.sheetsTitle = action.payload; // Añade este reductor para manejar la actualización del titulo de la hoja de cálculo
     },
@@ -103,7 +112,8 @@ export const {
   clearTemporalStudentIds,
   setSpreadsheetPages,
   setLoading,
-  setSheetsTitle
+  setSheetsTitle,
+  setColumnAData,
 } = qrSlice.actions;
 
 export default qrSlice.reducer;
