@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useDispatch } from 'react-redux'; // Importa el hook useDispatch
-import { setSheetsId } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
+import { setSheetsId, setSheetsTitle } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
 import { getSheetNames } from '../helpers'; // Importa la función getSheetNames
+import { getSheetTitle } from '../helpers/getSheetTitle';
 
 interface AddGoogleSheetProps {
   onAdd: (id: string) => void;
@@ -19,11 +20,12 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
   const handleAddButtonClick = () => {
     const match = sheetsUrl.match(/\/d\/(.+?)\/edit/);
     if (match) {
-      const id = match[1];
-      console.log(`Añadiendo Google Sheets con ID: ${id}`);
-      dispatch(setSheetsId(id)); // Despacha la acción setSheetsId con el ID de la hoja de cálculo
-      onAdd(id);
-      getSheetNames(dispatch); // Llama a getSheetNames después de despachar setSheetsId
+        const id = match[1];
+        console.log(`Añadiendo Google Sheets con ID: ${id}`);
+        dispatch(setSheetsId(id)); // Despacha la acción setSheetsId con el ID de la hoja de cálculo
+        onAdd(id);
+        getSheetNames(dispatch); // Llama a getSheetNames después de despachar setSheetsId
+        //getSheetTitle(dispatch);
     } else {
       Alert.alert('URL inválida', 'Por favor, introduce una URL válida de Google Sheets.');
     }
