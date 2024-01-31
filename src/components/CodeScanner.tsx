@@ -155,7 +155,7 @@ export const CodeScanner = () => {
 
                     <View style={styles.eventInfoContainer}>
                         <Text style={{ color: 'white' }}>Evento</Text>
-                        <Text style={{ color: 'white', marginTop: 20, fontSize: 20 }}>{currentSpreadsheetPage}</Text>
+                        <Text style={{ color: 'white', marginTop: HEIGHT*0.02, fontSize: WIDTH*0.049 }}>{currentSpreadsheetPage}</Text>
                     </View>
 
                     <View style={styles.onlineStatusContainer}>
@@ -166,7 +166,7 @@ export const CodeScanner = () => {
                     </View>
                 </View>
                 <View style={styles.textScan}>
-                    <Text style={{ color: 'white', fontSize: 16, textAlign: 'center'}}>{text}</Text>
+                    <Text style={{ color: 'white', fontSize: WIDTH*0.05, textAlign: 'center'}}>{text}</Text>
                 </View>
             
             </View>
