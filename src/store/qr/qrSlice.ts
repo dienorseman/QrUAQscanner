@@ -9,6 +9,7 @@ export interface QrState {
   spreadsheetPages: Array<string>;
   loading: boolean;
   sheetsId: string;
+  sheetsTitle: string,
 }
 
 const initialState: QrState = {
@@ -20,12 +21,16 @@ const initialState: QrState = {
   temporalStundetIds: [],
   spreadsheetPages: [],
   loading: false,
+  sheetsTitle: '',
 };
 
 export const qrSlice = createSlice({
   name: 'qr',
   initialState,
   reducers: {
+    setSheetsTitle: (state, action) => {
+      state.sheetsTitle = action.payload; // Añade este reductor para manejar la actualización del titulo de la hoja de cálculo
+    },
     setSheetsId: (state, action) => {
       state.sheetsId = action.payload; // Añade este reductor para manejar la actualización del ID de la hoja de cálculo
     },
@@ -97,7 +102,8 @@ export const {
   addTemporalStudentId,
   clearTemporalStudentIds,
   setSpreadsheetPages,
-  setLoading
+  setLoading,
+  setSheetsTitle
 } = qrSlice.actions;
 
 export default qrSlice.reducer;
