@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 import { useDispatch } from 'react-redux'; // Importa el hook useDispatch
 import { setSheetsId, setSheetsTitle } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
 import { getSheetNames } from '../helpers'; // Importa la función getSheetNames
-import { getSheetTitle } from '../helpers/getSheetTitle';
+import { Dimensions } from 'react-native';
+
+// Obtén las dimensiones de la ventana
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 interface AddGoogleSheetProps {
   onAdd: (id: string) => void;
@@ -33,6 +37,8 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>UAQ</Text>
+      <Text style={styles.subtitle}>Escaner de Eventos</Text>
       <TextInput
         style={styles.input}
         value={sheetsUrl}
@@ -48,14 +54,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: windowWidth*0.04,
+  },
+  title: {
+    fontSize: windowWidth*0.08,
+    fontWeight: 'bold',
+    color: '#841584',
+    textAlign: 'center',
+    marginBottom: windowHeight*0.02,
+  },
+  subtitle: {
+    fontSize: windowWidth*0.08,
+    fontWeight: 'bold',
+    color: '#001C99',
+    textAlign: 'center',
+    marginBottom: windowHeight*0.02,
   },
   input: {
-    height: 40,
+    height: windowHeight * 0.05,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
+    marginBottom: windowHeight * 0.02,
+    paddingLeft: windowWidth * 0.02,
   },
 });
 
