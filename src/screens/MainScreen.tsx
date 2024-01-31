@@ -56,9 +56,6 @@ export const MainScreen = () => {
     )
 }
 
-
-
-
 const styles = StyleSheet.create({
     //Main Container - Contenedor Principal
     container: {
