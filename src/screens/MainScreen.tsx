@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-//components
+// Components
 import { CodeScanner, SpreadsheetSelector, AddGoogleSheets } from '../components';
-// redux 
+// Redux 
 import { useAppSelector } from '../store/store';
 
 
-// hooks
+// Hooks
 import { useCheckNetwork } from '../hooks/useCheckNetwork';
 import { useUploadStudents } from '../hooks/useUploadStudents';
 
-//components
+// Components
 import { Tittle } from '../components/Tittle';
 import { MaskComponent } from '../components/MaskComponent';
 
