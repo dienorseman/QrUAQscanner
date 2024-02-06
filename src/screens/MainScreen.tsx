@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-//components
+// Components
 import { CodeScanner, SpreadsheetSelector } from '../components';
 // redux 
 import { useAppSelector } from '../store/store';
