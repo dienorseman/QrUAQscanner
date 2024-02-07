@@ -30,10 +30,10 @@ export const qrSlice = createSlice({
   name: 'qr',
   initialState,
   reducers: {
-    setColumnAData: (state: QrState, action: PayloadAction<string>) => {
+    setColumnAData: (state: QrState, action: PayloadAction<string[]>) => {
       return{
         ...state,
-        columnAData: [...state.columnAData, action.payload],
+        columnAData: action.payload,
         unsentPayload: true,
       };
     },
