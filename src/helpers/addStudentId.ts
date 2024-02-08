@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
+import qrSlice, { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
@@ -21,10 +21,13 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
 
   axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
-      // console.log(res.data);
-      if (res.data && res.data.expedientes) {
-        const expedientes = res.data.expedientes; // asumiendo que res.data.expedientes es una lista de expedientes
-        if (expedientes.includes(text)) {
+      const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
+      console.log("EXPEDIENTES 1: " + exps);
+      console.log("Texto: " + text);
+      var num = 0;
+      num = parseInt(text);
+      if (exps) {
+        if (exps.includes(num)) {
           console.log("Ya se registró ese expediente anteriormente");
         } else {
           axios.post(addUrl, requestData, { headers }) // Agregar el nuevo expediente solo si no existe
