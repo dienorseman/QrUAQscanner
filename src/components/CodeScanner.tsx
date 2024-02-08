@@ -8,7 +8,7 @@ import Svg, { G, Path, Rect, Defs, Circle, Mask } from "react-native-svg";
 
 import { addStudentId } from "../helpers/addStudentId";
 import { clearTemporalStudentIds, selectSpreadsheetPage } from "../store/qr/qrSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { store, useAppDispatch, useAppSelector } from "../store/store";
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -44,6 +44,8 @@ export const CodeScanner = () => {
     }
 
     const handleScan = ({ data, type }: scanTypes) => {
+        const exp = store.getState().qr.columnAData;
+        const exps = exp.map(item => String(item));
         setScanned(true);
         console.log(`Tipe: ${type}, Data: ${data}`);
         const validID = /^[1-9]+[0-9]{0,6}$/;
@@ -52,7 +54,7 @@ export const CodeScanner = () => {
             setScanned(false)
             return
         }
-        if (temporalStundetIds.includes(data)) {        
+        if (temporalStundetIds.includes(data) || exps.includes(data)) {        
             toast.show('Ya se ha agregado este estudiante', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
             setTimeout(() => {
                 setText(
@@ -60,7 +62,6 @@ export const CodeScanner = () => {
                 );
                 setScanned(false);
             }, 3000);
-
             return;
         }
 
