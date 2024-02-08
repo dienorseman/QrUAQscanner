@@ -4,40 +4,41 @@ import { Picker } from '@react-native-picker/picker';
 
 import { selectSpreadsheetPage } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
-import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import { Dimensions } from 'react-native';
+import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
+import  ColumnADataList  from './ColumnADataList';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export const SpreadsheetSelector = () => {
 
-    const [selectedId, setSelectedId] = useState<string>();
-    const [showPicker, setShowPicker] = useState(false); // Nuevo estado para mostrar u ocultar el Picker
+    const [selectedId, setSelectedId] = useState<string>('');
 
     const { spreadsheetPages, loading, columnAData } = useAppSelector(state => state.qr);
 
     const dispatch = useAppDispatch();
-    
-    //const {fetchSheetNames} = useLoadSheetNames();
 
-    //const {fetchSheetData} = useLoadColumnAData();
+    const { fetchColumnAData } = useLoadColumnAData(selectedId);
+
+    useEffect(() => {
+        if (selectedId) {
+            fetchColumnAData();
+            // console.log(fetchColumnAData);
+        }
+    }, [selectedId]);
 
     useEffect(() => {
 
     }, [spreadsheetPages])
-
-    useEffect(() => {
-
-    }, [columnAData])
 
     return (
         <View style={styles.container}>
             {
                 (loading) ?
                     <Text>Loading...</Text> :
-                    <View>
+                    <View style={styles.container}>
                         <View style={styles.pickerContainer}>
                             <Picker
                                 style={styles.picker}
@@ -69,25 +70,17 @@ export const SpreadsheetSelector = () => {
                                 <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
                             </TouchableOpacity>
                         )}
+                        {selectedId && <ColumnADataList columnAData={columnAData} />}
                     </View>
             }
-            <View>
-                {selectedId && (
-                    <FlatList
-                        data={columnAData}
-                        renderItem={({ item }) => <Text style={styles.listItem}>{item}</Text>}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                )}
-            </View>
         </View>
     )
 }
 
 //Contenedor principal para la lista de elementos
-//Contenedor principal para la lista de elementos
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         marginTop: 10,
         border: 1,
         //borderWidth: 5,

@@ -8,16 +8,19 @@ export const getColumnAData = (dispatch: typeof store.dispatch, sheetName: strin
     const getDataUrl =
         'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec?spreadsheetId=' +
         sheetsId +
-        '&sheets=' + sheetName + '!A:A';
+        '&sheetName=' + sheetName + '&sheets=A:A';
         console.log(getDataUrl); 
   
     dispatch(setLoading(true));
     axios
       .get(getDataUrl)
-      .then((res) => {
-        dispatch(setColumnAData(res.data.columnAData)); // Despacha los datos de la columna A al estado de Redux
-        console.log('Intentando obtener datos de: ');
-        console.log(res.data.columnAData);
+      .then((res) => {  
+        const columnAData = res.data.columnAData.map((item: string[]) => item[0]);
+        // Filtra las cadenas vacías
+        const filteredColumnAData = columnAData.filter((item: string) => item !== '');
+        dispatch(setColumnAData(filteredColumnAData)); // Despacha los datos de la columna A al estado de Redux
+        console.log('Datos de la hoja: ');
+        console.log(filteredColumnAData);
       })
       .catch((err) => {
         console.log(err);
