@@ -21,10 +21,12 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
     setSheetsUrl(text);
   };
 
+  var id = '';
+
   const handleAddButtonClick = () => {
     const match = sheetsUrl.match(/\/d\/(.+?)\/edit/);
     if (match) {
-        const id = match[1];
+        id = match[1];
         console.log(`Añadiendo Google Sheets con ID: ${id}`);
         dispatch(setSheetsId(id)); // Despacha la acción setSheetsId con el ID de la hoja de cálculo
         onAdd(id);
@@ -35,7 +37,13 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
     }
   };
 
+  const omitirButton = () => {
+    console.log("Omitir selección");
+    onAdd(id);
+  }
+
   return (
+    <>
     <View style={styles.container}>
       <Text style={styles.title}>UAQ</Text>
       <Text style={styles.subtitle}>Escaner de Eventos</Text>
@@ -46,7 +54,10 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
         placeholder="Introduce la URL de Google Sheets aquí"
       />
       <Button title="Añadir Google Sheets" onPress={handleAddButtonClick} color="#841584" />
+      <Text></Text>
+      <Button title="Omitir" onPress={omitirButton} color="#841584" />
     </View>
+    </>
   );
 };
 

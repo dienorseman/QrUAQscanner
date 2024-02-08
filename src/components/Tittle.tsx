@@ -35,14 +35,18 @@ export const Tittle = () => {
     }, [sheetsTitle]);
 
     return (
-        <View style={styles.container}>
-            {
-                (loading) ?
-                    <Text>Loading</Text>:
-                    <><Text style={styles.header}>{sheetsTitle}</Text><Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text></>
-            }
-            
-        </View>
+      <View style={styles.container}>
+        {
+          (loading) ?
+              <Text>Loading</Text>:
+              <>
+                <Text style={styles.header}>Controlador de Eventos</Text>
+                {sheetsTitle ? 
+                    <><Text style={styles.header}>{sheetsTitle}</Text><Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text></> 
+                    : <Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text>}
+              </>
+        }
+      </View>
     )
 }
 
