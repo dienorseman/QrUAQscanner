@@ -19,7 +19,8 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     'Content-Type': 'application/json',
   };
 
-  axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
+  if(store.getState().qr.online){
+    axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
       const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
       console.log("EXPEDIENTES 1: " + exps);
@@ -48,5 +49,16 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     .catch((e) => {
       console.error('Error:', e);
     });
-};
+  } else {
+    const exps = store.getState().qr.temporalStundetIds.map(Item => String(Item));
+    if(exps.includes(text)){
+      console.log("Ya se registró ese expediente anteriormente");
+    }else{
+      console.log("Registro Temporal Exitoso");
+      dispatch(addTemporalStudentId(text));
+      console.log(exps);
+    }
+  };
+}
+  
 
