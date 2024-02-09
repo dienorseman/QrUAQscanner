@@ -92,6 +92,12 @@ export const qrSlice = createSlice({
         spreadsheetPages: action.payload,
       };
     },
+    clearSpreadsheetPages: (state: QrState) => {
+      return{
+        ...state,
+        spreadsheetPages: [],
+      }
+    },
     setLoading: (state: QrState, action: PayloadAction<boolean>) => {
       return {
         ...state,
@@ -114,6 +120,7 @@ export const {
   setLoading,
   setSheetsTitle,
   setColumnAData,
+  clearSpreadsheetPages,
 } = qrSlice.actions;
 
 export default qrSlice.reducer;
