@@ -1,7 +1,6 @@
 import axios from 'axios';
-import qrSlice, { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
+import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
-import { SpreadsheetSelector } from '../components';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
 
@@ -20,12 +19,10 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     'Content-Type': 'application/json',
   };
 
-  if(store.getState().qr.online && sheetsId){
+  if(store.getState().qr.online && sheetsId && currentSpreadsheetPage != "Offline"){
     axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
       const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
-      console.log("EXPEDIENTES 1: " + exps);
-      console.log("Texto: " + text);
       var num = 0;
       num = parseInt(text);
       if (exps) {
