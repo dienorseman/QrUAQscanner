@@ -42,6 +42,9 @@ export const MainScreen = () => {
                                 <View style={styles.buttonContainer}>
                                     <Button title="Seleccionar Hoja" onPress={() => setIsSheetAdded(false)} color="#800080" />
                                 </View>
+                                <View style={styles.buttonContainer}>
+                                    <Button title="Enviar Expedientes Pendientes"/>
+                                </View>
                             </>)
                     }
                     <StatusBar style="auto" />
@@ -82,9 +85,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     buttonContainer: {
-        position: 'absolute',
+        position: 'relative',
         bottom: 0,
         left: 0,
-        margin: 16,
+        margin: 10,
     }
 });
