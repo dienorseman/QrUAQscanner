@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import  ColumnADataList  from './ColumnADataList';
+import ColumnCheckList from './ColumnCheckList';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -74,7 +75,9 @@ export const SpreadsheetSelector = () => {
                                 <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
                             </TouchableOpacity>
                         )}
-                        {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData} />}
+                        <View style={styles.container}></View>
+                        {selectedId && selectedId != "Offline" && <ColumnCheckList columnAData={expedientesPormandar}  />}
+                        {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
                     </View>
             }
