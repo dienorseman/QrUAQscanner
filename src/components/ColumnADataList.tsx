@@ -7,7 +7,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-      marginTop: 10,
+      marginTop: 20,
       border: 1,
       borderColor: 'red',
       width: '100%',
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     listItem: {
       fontSize: windowWidth * 0.04, // 4% del ancho de la ventana
       color: '#841584',
-      textAlign: 'center',
+      textAlign: 'left',
       marginBottom: windowHeight * 0.01, // 1% de la altura de la ventana
       backgroundColor: '#f8f8f8',
       padding: windowHeight * 0.01, // 1% de la altura de la ventana
