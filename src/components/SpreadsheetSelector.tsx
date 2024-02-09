@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert, SafeAreaView, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-import { selectSpreadsheetPage } from '../store/qr/qrSlice';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { selectSpreadsheetPage, setColumnAData } from '../store/qr/qrSlice';
+import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import  ColumnADataList  from './ColumnADataList';
@@ -14,9 +14,9 @@ const windowHeight = Dimensions.get('window').height;
 
 export const SpreadsheetSelector = () => {
 
-    const [selectedId, setSelectedId] = useState<string>('');
+    const [selectedId, setSelectedId] = useState<string>('Offline');
 
-    const { spreadsheetPages, loading, columnAData } = useAppSelector(state => state.qr);
+    const { spreadsheetPages, loading, columnAData, expedientesPormandar } = useAppSelector(state => state.qr);
 
     const dispatch = useAppDispatch();
 
@@ -33,6 +33,10 @@ export const SpreadsheetSelector = () => {
 
     }, [spreadsheetPages])
 
+    useEffect(() => {
+        //console.log("Alumnos Temporales: " + expedientesPormandar);
+    }, [expedientesPormandar])
+
     return (
         <View style={styles.container}>
             {
@@ -48,13 +52,13 @@ export const SpreadsheetSelector = () => {
                                     //dispatch(selectSpreadsheetPage(itemValue));
                                 }}
                             >
-                                <Picker.Item label="Selecciona una opción" value="" />
+                                <Picker.Item label="Expedientes Sin Enviar" value="Offline" />
                                 {spreadsheetPages.map((item, index) => (
                                     <Picker.Item key={index} label={item} value={item} />
                                 ))}
                             </Picker>
                         </View>
-                        { selectedId && (
+                        { (
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: '#841584',
@@ -70,7 +74,8 @@ export const SpreadsheetSelector = () => {
                                 <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
                             </TouchableOpacity>
                         )}
-                        {selectedId && <ColumnADataList columnAData={columnAData} />}
+                        {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData} />}
+                        {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
                     </View>
             }
         </View>
