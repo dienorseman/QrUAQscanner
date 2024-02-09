@@ -9,7 +9,6 @@ export const getColumnAData = (dispatch: typeof store.dispatch, sheetName: strin
         'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec?spreadsheetId=' +
         sheetsId +
         '&sheetName=' + sheetName + '&sheets=A:A';
-        console.log(getDataUrl); 
   
     dispatch(setLoading(true));
     axios
