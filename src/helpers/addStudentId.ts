@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qrSlice, { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
+import { SpreadsheetSelector } from '../components';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
 
@@ -19,7 +20,7 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     'Content-Type': 'application/json',
   };
 
-  if(store.getState().qr.online){
+  if(store.getState().qr.online && sheetsId){
     axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
       const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
@@ -51,12 +52,16 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     });
   } else {
     const exps = store.getState().qr.temporalStundetIds.map(Item => String(Item));
+    const pendingExps = store.getState().qr.expedientesPormandar.map(Item => String(Item));
     if(exps.includes(text)){
-      console.log("Ya se registró ese expediente anteriormente");
+      console.error("Ya se registró ese expediente anteriormente");
     }else{
-      console.log("Registro Temporal Exitoso");
       dispatch(addTemporalStudentId(text));
-      console.log(exps);
+      if(!pendingExps.includes(text)){
+        dispatch(addpendingExpediente(text));
+      }else{
+        console.error("Ya se registró ese expediente anteriormente");
+      }
     }
   };
 }
