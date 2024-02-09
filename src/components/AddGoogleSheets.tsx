@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 import { useDispatch } from 'react-redux'; // Importa el hook useDispatch
-import { setSheetsId, setSheetsTitle } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
+import { setSheetsId, setSheetsTitle, clearSpreadsheetPages } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
 import { getSheetNames } from '../helpers'; // Importa la función getSheetNames
 import { Dimensions } from 'react-native';
 
@@ -38,8 +38,11 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
   };
 
   const omitirButton = () => {
-    console.log("Omitir selección");
+    id = '';
+    dispatch(setSheetsId(id));
     onAdd(id);
+    console.log("Omitir selección");
+    dispatch(clearSpreadsheetPages());
   }
 
   return (
