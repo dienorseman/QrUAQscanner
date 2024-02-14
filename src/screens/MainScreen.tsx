@@ -42,9 +42,6 @@ export const MainScreen = () => {
                                 <View style={styles.buttonContainer}>
                                     <Button title="Seleccionar Hoja" onPress={() => setIsSheetAdded(false)} color="#800080" />
                                 </View>
-                                <View style={styles.buttonContainer}>
-                                    <Button title="Enviar Expedientes Pendientes"/>
-                                </View>
                             </>)
                     }
                     <StatusBar style="auto" />

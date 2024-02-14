@@ -7,11 +7,8 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-      marginTop: 20,
-      border: 1,
-      borderColor: 'red',
       width: '100%',
-      height: '100%',
+      height: '50%',
     },
     listItem: {
       fontSize: windowWidth * 0.04, // 4% del ancho de la ventana
@@ -26,10 +23,10 @@ const styles = StyleSheet.create({
   
 
 interface ColumnCheckListProps {
-  columnAData: string[];
+  columnCheckList: string[];
 }
 
-const ColumnCheckList: React.FC<ColumnCheckListProps> = ({ columnAData }) => {
+const ColumnCheckList: React.FC<ColumnCheckListProps> = ({ columnCheckList }) => {
     const renderItem = ({ item }: { item: string }) => (
       <Text style={styles.listItem}>
         {item}
@@ -37,8 +34,8 @@ const ColumnCheckList: React.FC<ColumnCheckListProps> = ({ columnAData }) => {
     );
   
     return (
-      <FlatList
-        data={columnAData}
+      <FlatList style={styles.container}
+        data={columnCheckList}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
       />

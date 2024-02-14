@@ -13,12 +13,17 @@ export const useUploadStudents = () => {
     online,
     currentSpreadsheetPage,
   } = useAppSelector((state) => state.qr);
-  useEffect(() => {
+  const uploadStudents = () => {
     if (online && unsentPayload) {
       for (const expediente of expedientesPormandar) {
         addStudentId(expediente, dispatch, currentSpreadsheetPage);
         dispatch(removependingExpediente(expediente));
       }
     }
+  };
+  useEffect(() => {
+    useUploadStudents();
   }, [online, unsentPayload, expedientesPormandar]);
+
+  return { uploadStudents };
 };

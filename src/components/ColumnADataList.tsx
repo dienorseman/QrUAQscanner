@@ -7,9 +7,6 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-      marginTop: 20,
-      border: 1,
-      borderColor: 'red',
       width: '100%',
       height: '100%',
     },
@@ -37,7 +34,7 @@ const ColumnADataList: React.FC<ColumnADataListProps> = ({ columnAData }) => {
     );
   
     return (
-      <FlatList
+      <FlatList style={styles.container}
         data={columnAData}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

@@ -8,7 +8,8 @@ import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import  ColumnADataList  from './ColumnADataList';
 import ColumnCheckList from './ColumnCheckList';
-
+import { addStudentId } from '../helpers';
+import { useUploadStudents } from '../hooks/useUploadStudents';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -76,9 +77,10 @@ export const SpreadsheetSelector = () => {
                             </TouchableOpacity>
                         )}
                         <View style={styles.container}></View>
-                        {selectedId && selectedId != "Offline" && <ColumnCheckList columnAData={expedientesPormandar}  />}
+                        {selectedId && selectedId != "Offline" && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
+                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" /></View>}
                     </View>
             }
         </View>
@@ -95,6 +97,12 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         width: '100%',
         height: '100%',
+    },
+    buttonContainer: {
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        margin: 10,
     },
     pickerContainer: {
         borderWidth: 1,
