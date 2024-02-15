@@ -16,14 +16,22 @@ export const useUploadStudents = () => {
   const uploadStudents = () => {
     if (online && unsentPayload) {
       for (const expediente of expedientesPormandar) {
-        addStudentId(expediente, dispatch, currentSpreadsheetPage);
-        dispatch(removependingExpediente(expediente));
+        try{
+          addStudentId(expediente, dispatch, currentSpreadsheetPage);
+          dispatch(removependingExpediente(expediente));
+        }catch(error){
+          console.error(error);
+        }
       }
+    }else if(online && !unsentPayload){
+      console.error('No hay nada para enviar!');
+    }else{
+      console.warn('No parece estar conectado a internet');
     }
   };
-  useEffect(() => {
-    useUploadStudents();
-  }, [online, unsentPayload, expedientesPormandar]);
+  // useEffect(() => {
+  //   uploadStudents();
+  // }, [online, unsentPayload, expedientesPormandar]);
 
-  return { uploadStudents };
+  return { uploadStudents, useEffect };
 };
