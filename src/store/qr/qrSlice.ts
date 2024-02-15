@@ -6,6 +6,7 @@ export interface QrState {
   expedientesPormandar: Array<string>;
   temporalStundetIds: Array<string>;
   currentSpreadsheetPage: string;
+  temporalSpreadSheetPage: string;
   spreadsheetPages: Array<string>;
   loading: boolean;
   sheetsId: string;
@@ -19,6 +20,7 @@ const initialState: QrState = {
   unsentPayload: false,
   expedientesPormandar: [],
   currentSpreadsheetPage: '',
+  temporalSpreadSheetPage:'',
   temporalStundetIds: [],
   spreadsheetPages: [],
   loading: false,
@@ -104,6 +106,12 @@ export const qrSlice = createSlice({
         loading: action.payload,
       };
     },
+    addTemporalSpreadSheet: (state: QrState, action: PayloadAction<string>) => {
+      return{
+        ...state,
+        temporalSpreadSheetPage: action.payload,
+      }
+    },
   },
 
 });
@@ -115,6 +123,7 @@ export const {
   removependingExpediente,
   selectSpreadsheetPage,
   addTemporalStudentId,
+  addTemporalSpreadSheet,
   clearTemporalStudentIds,
   setSpreadsheetPages,
   setLoading,
