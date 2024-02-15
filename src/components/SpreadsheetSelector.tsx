@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert, SafeAreaView, Button } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-import { selectSpreadsheetPage, setColumnAData } from '../store/qr/qrSlice';
+import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import  ColumnADataList  from './ColumnADataList';
 import ColumnCheckList from './ColumnCheckList';
-import { addStudentId } from '../helpers';
 import { useUploadStudents } from '../hooks/useUploadStudents';
+import { current } from '@reduxjs/toolkit';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,6 +23,8 @@ export const SpreadsheetSelector = () => {
     const dispatch = useAppDispatch();
 
     const { fetchColumnAData } = useLoadColumnAData(selectedId);
+
+    const { uploadStudents } = useUploadStudents();
 
     useEffect(() => {
         if (selectedId) {
@@ -51,7 +53,8 @@ export const SpreadsheetSelector = () => {
                                 selectedValue={selectedId}
                                 onValueChange={(itemValue) => {
                                     setSelectedId(itemValue);
-                                    //dispatch(selectSpreadsheetPage(itemValue));
+                                    dispatch(addTemporalSpreadSheet(itemValue));
+                                    console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
                                 }}
                             >
                                 <Picker.Item label="Expedientes Sin Enviar" value="Offline" />
@@ -80,7 +83,7 @@ export const SpreadsheetSelector = () => {
                         {selectedId && selectedId != "Offline" && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
-                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" /></View>}
+                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
                     </View>
             }
         </View>
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 10,
-        border: 1,
+        //border: 1,
         //borderWidth: 5,
         borderColor: 'red',
         width: '100%',
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
     },
     //Style para la lista de elementos
     lista: {
-        border: 1,
+        //border: 1,
         //borderWidth: 5,
         borderColor: 'purple',
         alignItems: 'center',

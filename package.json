@@ -21,7 +21,7 @@
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.72.3",
+    "react-native": "0.73.4",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-select-dropdown": "^3.3.4",
     "react-native-svg": "^13.13.0",
