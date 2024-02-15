@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
+import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet, removeColumnAData } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
@@ -54,6 +54,7 @@ export const SpreadsheetSelector = () => {
                                 onValueChange={(itemValue) => {
                                     setSelectedId(itemValue);
                                     dispatch(addTemporalSpreadSheet(itemValue));
+                                    dispatch(removeColumnAData);
                                     console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
                                 }}
                             >
@@ -79,8 +80,7 @@ export const SpreadsheetSelector = () => {
                                 <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
                             </TouchableOpacity>
                         )}
-                        <View style={styles.container}></View>
-                        {selectedId && selectedId != "Offline" && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
+                        {selectedId && selectedId != "Offline" && expedientesPormandar.length>0 && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
                         {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         width: '100%',
         height: '100%',
+        alignItems: 'center',
     },
     buttonContainer: {
         position: 'relative',
-        bottom: 0,
-        left: 0,
+        width: '95%',
         margin: 10,
     },
     pickerContainer: {

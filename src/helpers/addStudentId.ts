@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
+import { useToast } from 'react-native-toast-notifications';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
 

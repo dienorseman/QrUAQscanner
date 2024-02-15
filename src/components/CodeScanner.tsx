@@ -48,11 +48,17 @@ export const CodeScanner = () => {
         const exps = exp.map(item => String(item));
         setScanned(true);
         console.log(`Tipe: ${type}, Data: ${data}`);
-        const validID = /^[1-9]+[0-9]{0,6}$/;
+        const validID = /^[1-9]+[0-9]{5}$/;
         if (!validID.test(data)||data.length>7){
             console.log('no valido');
-            setScanned(false)
-            return
+            toast.show('Expediente No Valido', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
+            setTimeout(() => {
+                setText(
+                    textDefault
+                );
+                setScanned(false);
+            }, 3000);
+            return;
         }
         if (temporalStundetIds.includes(data) || exps.includes(data)) {        
             toast.show('Ya se ha agregado este estudiante', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
@@ -306,7 +312,7 @@ const styles = StyleSheet.create({
     mainScan: {
         alignContent: 'center',
         justifyContent: 'space-around',
-        border: 1,
+        // border: 1,
         //borderWidth: 5,
         borderColor: 'red',
     },

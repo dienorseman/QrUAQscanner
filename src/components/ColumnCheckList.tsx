@@ -7,8 +7,8 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-      width: '100%',
-      height: '50%',
+      width: '95%',
+      height: '25%',
     },
     listItem: {
       fontSize: windowWidth * 0.04, // 4% del ancho de la ventana

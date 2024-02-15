@@ -70,6 +70,14 @@ export const qrSlice = createSlice({
         unsentPayload: state.expedientesPormandar.length > 0,
       };
     },
+    removeColumnAData: (
+      state: QrState
+    ) => {
+      return{
+        ...state,
+        columnAData: [],
+      };
+    },
     selectSpreadsheetPage: (state: QrState, action: PayloadAction<string>) => {
       return {
         ...state,
@@ -121,6 +129,7 @@ export const {
   switchOnline,
   addpendingExpediente,
   removependingExpediente,
+  removeColumnAData,
   selectSpreadsheetPage,
   addTemporalStudentId,
   addTemporalSpreadSheet,
