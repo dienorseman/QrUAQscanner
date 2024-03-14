@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 
 // Components
 import { CodeScanner, SpreadsheetSelector, AddGoogleSheets } from '../components';
+import { NavBar } from '../components/NavBar';
 // Redux 
 import { useAppSelector } from '../store/store';
 
@@ -39,6 +40,7 @@ export const MainScreen = () => {
                                 <SafeAreaView />
                                 <Tittle />
                                 <SpreadsheetSelector />
+                                {/* <NavBar onPress = {()=> setIsSheetAdded(false)}/> */}
                                 <View style={styles.buttonContainer}>
                                     <Button title="Seleccionar Hoja" onPress={() => setIsSheetAdded(false)} color="#800080" />
                                 </View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FlatList, Text, StyleSheet, RefreshControl } from 'react-native';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
@@ -27,18 +27,16 @@ interface ColumnADataListProps {
   columnAData: string[];
 }
 
-const itemValue = store.getState().qr.temporalSpreadSheetPage;
-const { fetchColumnAData } = useLoadColumnAData(itemValue);
-const fetch = fetchColumnAData()
-
 const ColumnADataList: React.FC<ColumnADataListProps> = ({ columnAData }) => {
     const [refreshing, setRefreshing] = useState(false);
+    const itemValue = store.getState().qr.temporalSpreadSheetPage;
+    const { fetchColumnAData } = useLoadColumnAData(itemValue);
 
-    const onRefresh = React.useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        fetch;
+        await fetchColumnAData();
         setRefreshing(false);
-    }, []);
+    }, [fetchColumnAData]);
 
     const renderItem = ({ item }: { item: string }) => (
       <Text style={styles.listItem}>

@@ -10,7 +10,6 @@ const App = () => {
   return (
     <Provider store={store}>
       <ToastProvider>
-
         <MainScreen />
       </ToastProvider>
     </Provider>

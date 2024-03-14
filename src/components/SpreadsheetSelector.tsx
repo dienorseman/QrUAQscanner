@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet, removeColumnAData } from '../store/qr/qrSlice';
+import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
 import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
 import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
@@ -54,7 +54,6 @@ export const SpreadsheetSelector = () => {
                                 onValueChange={(itemValue) => {
                                     setSelectedId(itemValue);
                                     dispatch(addTemporalSpreadSheet(itemValue));
-                                    dispatch(removeColumnAData);
                                     console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
                                 }}
                             >
