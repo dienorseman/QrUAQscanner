@@ -9,7 +9,6 @@ import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import  ColumnADataList  from './ColumnADataList';
 import ColumnCheckList from './ColumnCheckList';
 import { useUploadStudents } from '../hooks/useUploadStudents';
-import { current } from '@reduxjs/toolkit';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -48,20 +47,22 @@ export const SpreadsheetSelector = () => {
                     <Text>Loading...</Text> :
                     <View style={styles.container}>
                         <View style={styles.pickerContainer}>
-                            <Picker
-                                style={styles.picker}
-                                selectedValue={selectedId}
-                                onValueChange={(itemValue) => {
-                                    setSelectedId(itemValue);
-                                    dispatch(addTemporalSpreadSheet(itemValue));
-                                    console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
-                                }}
-                            >
-                                <Picker.Item label="Expedientes Sin Enviar" value="Offline" />
-                                {spreadsheetPages.map((item, index) => (
-                                    <Picker.Item key={index} label={item} value={item} />
-                                ))}
-                            </Picker>
+                        <Picker
+                            style={styles.picker}
+                            selectedValue={selectedId}
+                            onValueChange={(itemValue) => {
+                                setSelectedId(itemValue);
+                                dispatch(addTemporalSpreadSheet(itemValue));
+                                console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
+                            }}
+                            itemStyle={{ color: '#800080' }} // texto blanco
+                        >
+                            <Picker.Item label="Expedientes Sin Enviar" value="Offline" />
+                            {spreadsheetPages.map((item, index) => (
+                                <Picker.Item key={index} label={item} value={item} />
+                            ))}
+                        </Picker>
+
                         </View>
                         { (
                             <TouchableOpacity
