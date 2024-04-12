@@ -1,30 +1,32 @@
+// IMPORTS
+// React
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-
-import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
-import { useAppDispatch, useAppSelector, store } from '../store/store';
 import { Dimensions } from 'react-native';
-import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
+// Components
 import  ColumnADataList  from './ColumnADataList';
 import ColumnCheckList from './ColumnCheckList';
+// Hooks
+import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
 import { useUploadStudents } from '../hooks/useUploadStudents';
+// Store
+import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
+import { useAppDispatch, useAppSelector, store } from '../store/store';
 
+// Dimensions to make the app portable to different devices
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export const SpreadsheetSelector = () => {
 
     const [selectedId, setSelectedId] = useState<string>('Offline');
-
     const { spreadsheetPages, loading, columnAData, expedientesPormandar } = useAppSelector(state => state.qr);
-
     const dispatch = useAppDispatch();
-
     const { fetchColumnAData } = useLoadColumnAData(selectedId);
-
     const { uploadStudents } = useUploadStudents();
 
+    // UseEffect to fetch the column data from the selected sheet.
     useEffect(() => {
         if (selectedId) {
             fetchColumnAData();
@@ -32,39 +34,45 @@ export const SpreadsheetSelector = () => {
         }
     }, [selectedId]);
 
+    // Loads the Spreadsheet's pages or sheets
     useEffect(() => {
 
     }, [spreadsheetPages])
 
+    // UseEffect to create the temporal data to send
     useEffect(() => {
         //console.log("Alumnos Temporales: " + expedientesPormandar);
     }, [expedientesPormandar])
 
     return (
-        <View style={styles.container}>
+        // Main Container
+        <View style={styles.container}> 
             {
+                // Conditional to manage when app is loading
                 (loading) ?
                     <Text>Loading...</Text> :
+                    // View to load when complete loading
                     <View style={styles.container}>
+                        {/* Picker Container */}
                         <View style={styles.pickerContainer}>
-                        <Picker
-                            style={styles.picker}
-                            selectedValue={selectedId}
-                            onValueChange={(itemValue) => {
-                                setSelectedId(itemValue);
-                                dispatch(addTemporalSpreadSheet(itemValue));
-                                console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
-                            }}
-                            itemStyle={{ color: '#800080' }} // texto blanco
-                        >
-                            <Picker.Item label="Expedientes Sin Enviar" value="Offline" />
-                            {spreadsheetPages.map((item, index) => (
-                                <Picker.Item key={index} label={item} value={item} />
-                            ))}
-                        </Picker>
-
+                            {/* The Picker to manage the spreadSheet's pages */}
+                            <Picker
+                                selectedValue={selectedId}
+                                onValueChange={(itemValue) => {
+                                    setSelectedId(itemValue);
+                                    dispatch(addTemporalSpreadSheet(itemValue));
+                                    console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
+                                }}
+                            >
+                                {/* Picker wich load when No page was selected */}
+                                <Picker.Item label="Expedientes Sin Enviar" value="Offline" color='black' />
+                                {spreadsheetPages.map((item, index) => (
+                                    <Picker.Item key={index} label={item} value={item} color='black' />
+                                ))}
+                            </Picker>
                         </View>
                         { (
+                            // Scanner Button
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: '#841584',
@@ -80,10 +88,10 @@ export const SpreadsheetSelector = () => {
                                 <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
                             </TouchableOpacity>
                         )}
+                        {/* Conditionals according to the page selected and their data */}
                         {selectedId && selectedId != "Offline" && expedientesPormandar.length>0 && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
-                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
                     </View>
             }
         </View>
@@ -95,8 +103,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 10,
-        //border: 1,
-        //borderWidth: 5,
         borderColor: 'red',
         width: '100%',
         height: '100%',
@@ -107,6 +113,7 @@ const styles = StyleSheet.create({
         width: '95%',
         margin: 10,
     },
+    // Style of the picker container
     pickerContainer: {
         borderWidth: 1,
         borderColor: '#CCCCCC',
@@ -116,16 +123,16 @@ const styles = StyleSheet.create({
         width: '95%',
         alignSelf: 'center',
     },
+    // Picker's style
     picker: {
         height: 50,
         width: '100%',
-        color: '#8A3CB0', // El color del texto en el Picker
-
     },
     picker_text: {
         fontSize: 20,
     },
-    //Style para la lista de elementos
+
+    // List's Style
     lista: {
         //border: 1,
         //borderWidth: 5,
@@ -133,6 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    // Item's Style
     item: {
         padding: 20,
         marginVertical: 8,
@@ -145,6 +153,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
     },
+
+    // Title's Style
     title: {
         fontSize: 22,
         fontWeight: '600',
@@ -165,6 +175,7 @@ const styles = StyleSheet.create({
         objectFit: 'cover',
     },
 
+    // List of Items - Data from the selected sheet.
     listItem: {
         fontSize: windowWidth * 0.04, // 4% del ancho de la ventana
         color: '#841584',
