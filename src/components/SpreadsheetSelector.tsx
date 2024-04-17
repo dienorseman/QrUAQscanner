@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
@@ -47,6 +47,7 @@ export const SpreadsheetSelector = () => {
                 (loading) ?
                     <Text>Loading...</Text> :
                     <View style={styles.container}>
+                        <View style={styles.mosaico}>
                         <View style={styles.pickerContainer}>
                             <Picker
                                 style={styles.picker}
@@ -63,6 +64,7 @@ export const SpreadsheetSelector = () => {
                                 ))}
                             </Picker>
                         </View>
+                        <Text style={styles.space}></Text>
                         { (
                             <TouchableOpacity
                                 style={{
@@ -70,19 +72,20 @@ export const SpreadsheetSelector = () => {
                                     padding: 10,
                                     borderRadius: 5,
                                     alignSelf: 'center',
-                                    width: '95%'
+                                    width: '25%'
                                 }}
                                 onPress={() => {
                                     dispatch(selectSpreadsheetPage(selectedId));
                                 }}
                             >
-                                <Text style={{color: 'white', textAlign: 'center'}}>Scannear</Text>
+                            <Image style={styles.imgQR} source={require('../img/scann-qr.png')} />
                             </TouchableOpacity>
                         )}
+                        </View>
                         {selectedId && selectedId != "Offline" && expedientesPormandar.length>0 && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
-                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
+                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button color="#841584" title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
                     </View>
             }
         </View>
@@ -102,6 +105,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonContainer: {
+        overflow: 'hidden',
+        borderRadius: 10,
         position: 'relative',
         width: '95%',
         margin: 10,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#fff',
         marginVertical: 10,
-        width: '95%',
+        width: '65%',
         alignSelf: 'center',
     },
     picker: {
@@ -173,4 +178,16 @@ const styles = StyleSheet.create({
         padding: windowHeight * 0.01, // 1% de la altura de la ventana
         borderRadius: 5,
     },
+    space:{
+        width:10,
+    },
+    imgQR:{
+        width: 30,
+        height: 30,
+        alignSelf: 'center',
+    },
+    mosaico:{
+        flexDirection: 'row', // Alinea los elementos en una fila horizontal
+        justifyContent: 'space-between',
+    }
 });
