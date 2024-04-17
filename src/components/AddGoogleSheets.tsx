@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux'; // Importa el hook useDispatch
 import { setSheetsId, setSheetsTitle, clearSpreadsheetPages } from '../store/qr/qrSlice'; // Importa la acción setSheetsId
 import { getSheetNames } from '../helpers'; // Importa la función getSheetNames
@@ -48,17 +48,22 @@ export const AddGoogleSheets: React.FC<AddGoogleSheetProps> = ({ onAdd }) => {
   return (
     <>
     <View style={styles.container}>
+    <Image style={styles.fif} source={require('../img/fif.png')} />
       <Text style={styles.title}>UAQ</Text>
       <Text style={styles.subtitle}>Escaner de Eventos</Text>
       <TextInput
         style={styles.input}
         value={sheetsUrl}
         onChangeText={handleInputChange}
-        placeholder="Introduce la URL de Google Sheets aquí"
+        placeholder="URL de Google Sheets"
       />
-      <Button title="Añadir Google Sheets" onPress={handleAddButtonClick} color="#841584" />
+      <View style={styles.access}>
+      <Button title="Acceder" onPress={handleAddButtonClick} color="#841584" />
+      </View>
       <Text></Text>
-      <Button title="Omitir" onPress={omitirButton} color="#841584" />
+      <View style={styles.button}>
+      <Button title="Omitir URL" onPress={omitirButton} color='#001C99' />
+      </View>
     </View>
     </>
   );
@@ -90,6 +95,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: windowHeight * 0.02,
     paddingLeft: windowWidth * 0.02,
+    borderRadius: 8,
   },
+  fif:{
+    width: 250,
+    height: 250,
+    alignSelf: 'center',
+  },
+  access:{
+    width: '70%',
+    alignSelf: 'center',
+    overflow: 'hidden', 
+    borderRadius: 10,
+  },
+  button:{
+    width: '40%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    overflow: 'hidden', 
+  }
 });
 
