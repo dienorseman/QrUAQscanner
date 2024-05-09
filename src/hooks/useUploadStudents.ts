@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { addStudentId } from '../helpers';
 
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { removependingExpediente } from '../store/qr/qrSlice';
+import { removependingExpediente, clearTemporalStudentIds } from '../store/qr/qrSlice';
 
 export const useUploadStudents = () => {
   const dispatch = useAppDispatch();
@@ -15,9 +15,11 @@ export const useUploadStudents = () => {
   } = useAppSelector((state) => state.qr);
   const uploadStudents = () => {
     if (online && unsentPayload) {
-      for (const expediente of expedientesPormandar) {
+      const numExpedientes = [...expedientesPormandar];
+      for (const expediente of numExpedientes   ) {
         try{
           addStudentId(expediente, dispatch, currentSpreadsheetPage);
+          dispatch(clearTemporalStudentIds());
           dispatch(removependingExpediente(expediente));
         }catch(error){
           console.error(error);

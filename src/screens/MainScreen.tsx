@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button, BackHandler } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 // Components
@@ -14,10 +14,14 @@ import { useCheckNetwork } from '../hooks/useCheckNetwork';
 
 // Components
 import { Tittle } from '../components/Tittle';
+import { useUploadStudents } from '../hooks/useUploadStudents';
 
 export const MainScreen = () => {
     const [isSheetAdded, setIsSheetAdded] = useState(false);
-
+    const {uploadStudents} = useUploadStudents();
+    const handleUpload = () => {
+        uploadStudents();
+    };
     const {
         currentSpreadsheetPage,
     } = useAppSelector(state => state.qr);
