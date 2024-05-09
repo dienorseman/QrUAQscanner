@@ -44,7 +44,10 @@ export const MainScreen = () => {
                                 <SafeAreaView />
                                 <Tittle />
                                 <SpreadsheetSelector />
-                                <NavBar onPress = {()=> setIsSheetAdded(false)} onPressAdd={handleUpload} onPressExit={BackHandler.exitApp}/>
+                                {/* <NavBar onPress = {()=> setIsSheetAdded(false)}/> */}
+                                <View style={styles.buttonContainer}>
+                                    <Button title="Regresar al Inicio" onPress={() => setIsSheetAdded(false)} color="#001C99" />
+                                </View>
                             </>)
                     }
                     <StatusBar style="auto" />
@@ -62,8 +65,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#ffff',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
+        alignItems: 'center',
+        justifyContent: 'center',
         //border: 1,
         //borderWidth: 5,
         borderColor: 'red',
@@ -85,6 +88,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     buttonContainer: {
+        overflow: 'hidden',
+        borderRadius: 10,
         position: 'relative',
         bottom: 0,
         left: 0,

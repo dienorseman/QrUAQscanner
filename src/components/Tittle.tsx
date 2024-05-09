@@ -42,7 +42,7 @@ export const Tittle = () => {
               <>
                 <Text style={styles.header}>Controlador de Eventos</Text>
                 {sheetsTitle ? 
-                    <><Text style={styles.header}>{sheetsTitle}</Text><Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text></> 
+                    <><Text style={styles.nameSheet}>{sheetsTitle}</Text><Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text></> 
                     : <Text style={styles.date}>{weekDay} {day}, {month.charAt(0).toUpperCase() + month.slice(1)}</Text>}
               </>
         }
@@ -63,10 +63,16 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   header: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: '400',
     marginBottom: 10,
     color: '#8A3CB0',
+  },
+  nameSheet: {
+    fontSize: 24,
+    color: '#001C99',
+    marginBottom: 5,
+    fontWeight: 'bold',
   },
   date:{
     fontSize: 18,
