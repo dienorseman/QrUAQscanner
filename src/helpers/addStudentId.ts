@@ -1,29 +1,41 @@
 import axios from 'axios';
 import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
-
-const sheetsId = '1ZS1HsrNPJF2l8DIxVM6_6aQJ8E6iEXlR0tbN3teKiUE';
-const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
+import { useToast } from 'react-native-toast-notifications';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
+
+  const temporalSpreadSheet = store.getState().qr.temporalSpreadSheetPage;
+  const sheetsId = store.getState().qr.sheetsId;
+  const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
+
   const requestData = {
     spreadsheetId: sheetsId,
     sheet: currentSpreadsheetPage,
     rows: [[text]],
   };
 
+  const tempRequestData = {
+    spreadsheetId: sheetsId,
+    sheet: temporalSpreadSheet,
+    rows: [[text]],
+  };
+
   const readUrl = `${addUrl}?spreadsheetId=${sheetsId}&sheets=expedientes&sheetName=${currentSpreadsheetPage}`;
+  const tempUrl = `${addUrl}?spreadsheetId=${sheetsId}&sheets=expedientes&sheetName=${temporalSpreadSheet}`;
 
   const headers = {
     'Content-Type': 'application/json',
   };
 
-  axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
+  if(store.getState().qr.online && sheetsId && currentSpreadsheetPage && currentSpreadsheetPage != 'Offline'){
+    axios.get(readUrl, { headers }) // Leer todos los expedientes existentes
     .then((res) => {
-      // console.log(res.data);
-      if (res.data && res.data.expedientes) {
-        const expedientes = res.data.expedientes; // asumiendo que res.data.expedientes es una lista de expedientes
-        if (expedientes.includes(text)) {
+      const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
+      var num = 0;
+      num = parseInt(text);
+      if (exps) {
+        if (exps.includes(num)) {
           console.log("Ya se registró ese expediente anteriormente");
         } else {
           axios.post(addUrl, requestData, { headers }) // Agregar el nuevo expediente solo si no existe
@@ -44,5 +56,50 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
     .catch((e) => {
       console.error('Error:', e);
     });
-};
+  } else {
+    if(store.getState().qr.online && sheetsId && !currentSpreadsheetPage && temporalSpreadSheet){
+      axios.get(tempUrl, { headers }) // Leer todos los expedientes existentes
+      .then((res) => {
+        const exps=res.data.expedientes.map((item: string[]) => item[0]).filter((item: string) => item !== '');
+        var num = 0;
+        num = parseInt(text);
+        if (exps) {
+          if (exps.includes(num)) {
+            console.log("Ya se registró ese expediente anteriormente");
+          } else {
+            axios.post(addUrl, tempRequestData, { headers }) // Agregar el nuevo expediente solo si no existe
+              .then((res) => {
+                console.log(res.status);
+                dispatch(addTemporalStudentId(text));
+              })
+              .catch((e) => {
+                console.error('Error:', e);
+                dispatch(addpendingExpediente(text));
+                dispatch(addTemporalStudentId(text));
+              });
+          }
+        } else {
+          console.error('Error: La respuesta de la API no contiene expedientes');
+        }
+      })
+      .catch((e) => {
+        console.error('Error:', e);
+      });
+    }else{
+      const exps = store.getState().qr.temporalStundetIds.map(Item => String(Item));
+      const pendingExps = store.getState().qr.expedientesPormandar.map(Item => String(Item));
+      if(exps.includes(text)){
+        console.error("Ya se registró ese expediente anteriormente");
+      }else{
+        dispatch(addTemporalStudentId(text));
+        if(!pendingExps.includes(text)){
+          dispatch(addpendingExpediente(text));
+        }else{
+          console.error("Ya se registró ese expediente anteriormente");
+        }
+      }
+    }
+  };
+}
+  
 

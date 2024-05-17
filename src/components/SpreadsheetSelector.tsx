@@ -1,95 +1,102 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
+// IMPORTS
+// React
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { Dimensions } from 'react-native';
+// Components
+import  ColumnADataList  from './ColumnADataList';
+import ColumnCheckList from './ColumnCheckList';
+// Hooks
+import { useLoadColumnAData } from '../hooks/useLoadSheetColumnAData';
+import { useUploadStudents } from '../hooks/useUploadStudents';
+// Store
+import { selectSpreadsheetPage, setColumnAData, addTemporalSpreadSheet } from '../store/qr/qrSlice';
+import { useAppDispatch, useAppSelector, store } from '../store/store';
 
-import { selectSpreadsheetPage } from '../store/qr/qrSlice';
-import { useAppDispatch, useAppSelector } from '../store/store';
-import { getSheetNames } from '../helpers';
-import { useLoadSheetNames } from '../hooks/useLoadSheetNames';
-
-
-type ItemProps = {
-    item: string;
-    onPress: () => void;
-    style: {
-        backgroundColor: string,
-        textColor: string,
-    }
-}
-
-const Item = ({ item, onPress, style }: ItemProps) => {
-
-    return (
-        //Contenedor de la lista de eventos.
-       <View style={styles.lista}>
-            <View style={[styles.item, { backgroundColor: style.backgroundColor }]}>
-                <Text style={[styles.title, { color: style.textColor }]}>{item}</Text>
-                <TouchableOpacity style={[styles.button]} onPress={onPress}>
-                    <Image
-                        style={styles.tinyLogo}
-                        source={require('../../assets/next.png')}
-                    />
-                </TouchableOpacity>
-            </View>
-        </View>
-        /*<View style={[styles.item, { backgroundColor: style.backgroundColor }]}>
-            <Text style={[styles.title, { color: style.textColor }]}>{item}</Text>
-            <TouchableOpacity style={[styles.button]} onPress={onPress}>
-                <Image
-                    style={styles.tinyLogo}
-                    source={require('../../assets/next.png')}
-                />
-            </TouchableOpacity>
-        </View>*/
-
-    )
-}
-
+// Dimensions to make the app portable to different devices
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export const SpreadsheetSelector = () => {
 
-    const [selectedId, setSelectedId] = useState<string>();
-
-    const { spreadsheetPages, loading } = useAppSelector(state => state.qr);
-
+    const [selectedId, setSelectedId] = useState<string>('Offline');
+    const { spreadsheetPages, loading, columnAData, expedientesPormandar } = useAppSelector(state => state.qr);
     const dispatch = useAppDispatch();
-    
-   const {fetchSheetNames} = useLoadSheetNames();
+    const { fetchColumnAData } = useLoadColumnAData(selectedId);
+    const { uploadStudents } = useUploadStudents();
 
+    // UseEffect to fetch the column data from the selected sheet.
+    useEffect(() => {
+        if (selectedId) {
+            fetchColumnAData();
+            // console.log(fetchColumnAData);
+        }
+    }, [selectedId]);
+
+    // Loads the Spreadsheet's pages or sheets
     useEffect(() => {
 
     }, [spreadsheetPages])
 
-
-
-    const renderItem = ({ item }: { item: string }) => {
-        const backgroundColor = item === selectedId ? "#fff" : "#fff";
-        const color = item === selectedId ? 'white' : 'black';
-
-        return (
-            <Item
-                item={item}
-                onPress={() => {
-                    setSelectedId(item);
-                    dispatch(selectSpreadsheetPage(item));
-                }}
-                style={{ backgroundColor, textColor: color }}
-            />
-        );
-    };
+    // UseEffect to create the temporal data to send
+    useEffect(() => {
+        //console.log("Alumnos Temporales: " + expedientesPormandar);
+    }, [expedientesPormandar])
 
     return (
-        <View style={styles.container}>
-
+        // Main Container
+        <View style={styles.container}> 
             {
+                // Conditional to manage when app is loading
                 (loading) ?
                     <Text>Loading...</Text> :
-                    <FlatList
-                        onMomentumScrollEnd={fetchSheetNames}
-                        data={spreadsheetPages}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item}
-                        extraData={selectedId}
-                    />
+                    // View to load when complete loading
+                    <View style={styles.container}>
+                        {/* Picker Container */}
+                        <View style={styles.mosaico}>
+                        <View style={styles.pickerContainer}>
+                            {/* The Picker to manage the spreadSheet's pages */}
+                            <Picker
+                                selectedValue={selectedId}
+                                onValueChange={(itemValue) => {
+                                    setSelectedId(itemValue);
+                                    dispatch(addTemporalSpreadSheet(itemValue));
+                                    console.log('Hoja: ' + store.getState().qr.temporalSpreadSheetPage);
+                                }}
+                            >
+                                {/* Picker wich load when No page was selected */}
+                                <Picker.Item label="Expedientes Sin Enviar" value="Offline" color='black' />
+                                {spreadsheetPages.map((item, index) => (
+                                    <Picker.Item key={index} label={item} value={item} color='black' />
+                                ))}
+                            </Picker>
+                        </View>
+                        <Text style={styles.space}></Text>
+                        { (
+                            // Scanner Button
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: '#841584',
+                                    padding: 10,
+                                    borderRadius: 5,
+                                    alignSelf: 'center',
+                                    width: '25%'
+                                }}
+                                onPress={() => {
+                                    dispatch(selectSpreadsheetPage(selectedId));
+                                }}
+                            >
+                            <Image style={styles.imgQR} source={require('../img/scann-qr.png')} />
+                            </TouchableOpacity>
+                        )}            
+                        </View>
+                        {/* Conditionals according to the page selected and their data */}
+                        {selectedId && selectedId != "Offline" && expedientesPormandar.length>0 && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
+                        {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
+                        {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
+                        {/* {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button color="#841584" title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>} */}
+                    </View>
             }
         </View>
     )
@@ -98,22 +105,48 @@ export const SpreadsheetSelector = () => {
 //Contenedor principal para la lista de elementos
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         marginTop: 10,
-        border: 1,
-        //borderWidth: 5,
         borderColor: 'red',
         width: '100%',
         height: '100%',
+        alignItems: 'center',
+    },
+    buttonContainer: {
+        overflow: 'hidden',
+        borderRadius: 10,
+        position: 'relative',
+        width: '95%',
+        margin: 10,
+    },
+    // Style of the picker container
+    pickerContainer: {
+        borderWidth: 1,
+        borderColor: '#CCCCCC',
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        marginVertical: 10,
+        width: '65%',
+        alignSelf: 'center',
+    },
+    // Picker's style
+    picker: {
+        height: 50,
+        width: '100%',
+    },
+    picker_text: {
+        fontSize: 20,
     },
 
-    //Style para la lista de elementos
+    // List's Style
     lista: {
-        border: 1,
+        //border: 1,
         //borderWidth: 5,
         borderColor: 'purple',
         alignItems: 'center',
     },
 
+    // Item's Style
     item: {
         padding: 20,
         marginVertical: 8,
@@ -126,6 +159,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
     },
+
+    // Title's Style
     title: {
         fontSize: 22,
         fontWeight: '600',
@@ -137,6 +172,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 10,
+        marginTop: '10%'
     },
 
     tinyLogo: {
@@ -145,4 +181,26 @@ const styles = StyleSheet.create({
         objectFit: 'cover',
     },
 
+    // List of Items - Data from the selected sheet.
+    listItem: {
+        fontSize: windowWidth * 0.04, // 4% del ancho de la ventana
+        color: '#841584',
+        textAlign: 'center',
+        marginBottom: windowHeight * 0.01, // 1% de la altura de la ventana
+        backgroundColor: '#f8f8f8',
+        padding: windowHeight * 0.01, // 1% de la altura de la ventana
+        borderRadius: 5,
+    },
+    space:{
+        width:10,
+    },
+    imgQR:{
+        width: 30,
+        height: 30,
+        alignSelf: 'center',
+    },
+    mosaico:{
+        flexDirection: 'row', // Alinea los elementos en una fila horizontal
+        justifyContent: 'space-between',
+    }
 });

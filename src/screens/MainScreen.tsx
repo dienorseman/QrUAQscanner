@@ -1,57 +1,62 @@
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Button, BackHandler } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-//components
-import { CodeScanner, SpreadsheetSelector } from '../components';
-// redux 
+// Components
+import { CodeScanner, SpreadsheetSelector, AddGoogleSheets } from '../components';
+import { NavBar } from '../components/NavBar';
+// Redux 
 import { useAppSelector } from '../store/store';
 
 
-// hooks
+// Hooks
 import { useCheckNetwork } from '../hooks/useCheckNetwork';
+
+// Components
+import { Tittle } from '../components/Tittle';
 import { useUploadStudents } from '../hooks/useUploadStudents';
 
-//components
-import { Tittle } from '../components/Tittle';
-import { MaskComponent } from '../components/MaskComponent';
-
 export const MainScreen = () => {
-
+    const [isSheetAdded, setIsSheetAdded] = useState(false);
+    const {uploadStudents} = useUploadStudents();
+    const handleUpload = () => {
+        uploadStudents();
+    };
     const {
         currentSpreadsheetPage,
     } = useAppSelector(state => state.qr);
 
     useCheckNetwork();
 
-    useUploadStudents();
-
-
-
     return (
-        /*
-        * Container. SafeAreaView is the main view to contain the others.
-        * Container. SafeAreaView es la vista padre, aquella que se encarga de contener las demás vistas.
-        */
         <>
-                {
-                
-                    (currentSpreadsheetPage !== '')
-                        ? <>
-                            <CodeScanner />
-                            {/* <MaskComponent /> */}
-                        </>
+            {!isSheetAdded ? (
+                <AddGoogleSheets onAdd={() => setIsSheetAdded(true)} />
+            ) : (
+                <>
+                    {
+                        (currentSpreadsheetPage !== '')
+                            ? <>
+                                <CodeScanner />
+                            </>
 
-                        : (<>
-                            <SafeAreaView />
-                            <Tittle />
-                            <SpreadsheetSelector />
-                        </>)
-                }
-            <StatusBar style="auto" />
+                            : (<>
+                                <SafeAreaView />
+                                <Tittle />
+                                <SpreadsheetSelector />
+                                <NavBar onPress = {()=> setIsSheetAdded(false)} onPressAdd={handleUpload} onPressExit={BackHandler.exitApp}/>
+                                {/* <NavBar onPress = {()=> setIsSheetAdded(false)}/> */}
+                                {/* <View style={styles.buttonContainer}>
+                                    <Button title="Regresar al Inicio" onPress={() => setIsSheetAdded(false)} color="#001C99" />
+                                </View> */}
+                            </>)
+                    }
+                    <StatusBar style="auto" />
+                </>
+            )}
         </>
     )
 }
-
 
 const styles = StyleSheet.create({
     //Main Container - Contenedor Principal
@@ -61,9 +66,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#ffff',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        border: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        //border: 1,
         //borderWidth: 5,
         borderColor: 'red',
     },
@@ -82,5 +87,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         textAlign: 'center',
+    },
+    buttonContainer: {
+        overflow: 'hidden',
+        borderRadius: 10,
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        margin: 10,
     }
 });

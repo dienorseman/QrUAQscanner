@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { addStudentId } from '../helpers';
 
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { removependingExpediente } from '../store/qr/qrSlice';
+import { removependingExpediente, clearTemporalStudentIds } from '../store/qr/qrSlice';
 
 export const useUploadStudents = () => {
   const dispatch = useAppDispatch();
@@ -13,12 +13,27 @@ export const useUploadStudents = () => {
     online,
     currentSpreadsheetPage,
   } = useAppSelector((state) => state.qr);
-  useEffect(() => {
+  const uploadStudents = () => {
     if (online && unsentPayload) {
-      for (const expediente of expedientesPormandar) {
-        addStudentId(expediente, dispatch, currentSpreadsheetPage);
-        dispatch(removependingExpediente(expediente));
+      const numExpedientes = [...expedientesPormandar];
+      for (const expediente of numExpedientes   ) {
+        try{
+          addStudentId(expediente, dispatch, currentSpreadsheetPage);
+          dispatch(clearTemporalStudentIds());
+          dispatch(removependingExpediente(expediente));
+        }catch(error){
+          console.error(error);
+        }
       }
+    }else if(online && !unsentPayload){
+      console.error('No hay nada para enviar!');
+    }else{
+      console.warn('No parece estar conectado a internet');
     }
-  }, [online, unsentPayload, expedientesPormandar]);
+  };
+  // useEffect(() => {
+  //   uploadStudents();
+  // }, [online, unsentPayload, expedientesPormandar]);
+
+  return { uploadStudents, useEffect };
 };

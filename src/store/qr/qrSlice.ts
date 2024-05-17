@@ -6,24 +6,45 @@ export interface QrState {
   expedientesPormandar: Array<string>;
   temporalStundetIds: Array<string>;
   currentSpreadsheetPage: string;
+  temporalSpreadSheetPage: string;
   spreadsheetPages: Array<string>;
   loading: boolean;
+  sheetsId: string;
+  sheetsTitle: string;
+  columnAData: Array<string>;
 }
 
 const initialState: QrState = {
+  sheetsId: '',
   online: null,
   unsentPayload: false,
   expedientesPormandar: [],
   currentSpreadsheetPage: '',
+  temporalSpreadSheetPage:'',
   temporalStundetIds: [],
   spreadsheetPages: [],
   loading: false,
+  sheetsTitle: '',
+  columnAData: [],
 };
 
 export const qrSlice = createSlice({
   name: 'qr',
   initialState,
   reducers: {
+    setColumnAData: (state: QrState, action: PayloadAction<string[]>) => {
+      return{
+        ...state,
+        columnAData: action.payload,
+        unsentPayload: true,
+      };
+    },
+    setSheetsTitle: (state, action) => {
+      state.sheetsTitle = action.payload; // Añade este reductor para manejar la actualización del titulo de la hoja de cálculo
+    },
+    setSheetsId: (state, action) => {
+      state.sheetsId = action.payload; // Añade este reductor para manejar la actualización del ID de la hoja de cálculo
+    },
     switchOnline: (state: QrState, action: PayloadAction<boolean>) => {
       return {
         ...state,
@@ -47,6 +68,14 @@ export const qrSlice = createSlice({
           (expediente) => expediente !== action.payload
         ),
         unsentPayload: state.expedientesPormandar.length > 0,
+      };
+    },
+    removeColumnAData: (
+      state: QrState
+    ) => {
+      return{
+        ...state,
+        columnAData: [],
       };
     },
     selectSpreadsheetPage: (state: QrState, action: PayloadAction<string>) => {
@@ -73,24 +102,43 @@ export const qrSlice = createSlice({
         spreadsheetPages: action.payload,
       };
     },
+    clearSpreadsheetPages: (state: QrState) => {
+      return{
+        ...state,
+        spreadsheetPages: [],
+      }
+    },
     setLoading: (state: QrState, action: PayloadAction<boolean>) => {
       return {
         ...state,
         loading: action.payload,
       };
     },
+    addTemporalSpreadSheet: (state: QrState, action: PayloadAction<string>) => {
+      return{
+        ...state,
+        temporalSpreadSheetPage: action.payload,
+      }
+    },
   },
 
 });
 
 export const {
+  setSheetsId,
   switchOnline,
   addpendingExpediente,
   removependingExpediente,
+  removeColumnAData,
   selectSpreadsheetPage,
   addTemporalStudentId,
+  addTemporalSpreadSheet,
   clearTemporalStudentIds,
   setSpreadsheetPages,
-  setLoading
+  setLoading,
+  setSheetsTitle,
+  setColumnAData,
+  clearSpreadsheetPages,
 } = qrSlice.actions;
+
 export default qrSlice.reducer;

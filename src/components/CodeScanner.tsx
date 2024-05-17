@@ -8,7 +8,7 @@ import Svg, { G, Path, Rect, Defs, Circle, Mask } from "react-native-svg";
 
 import { addStudentId } from "../helpers/addStudentId";
 import { clearTemporalStudentIds, selectSpreadsheetPage } from "../store/qr/qrSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { store, useAppDispatch, useAppSelector } from "../store/store";
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -44,15 +44,23 @@ export const CodeScanner = () => {
     }
 
     const handleScan = ({ data, type }: scanTypes) => {
+        const exp = store.getState().qr.columnAData;
+        const exps = exp.map(item => String(item));
         setScanned(true);
         console.log(`Tipe: ${type}, Data: ${data}`);
-        const validID = /^[1-9]+[0-9]{0,6}$/;
+        const validID = /^[1-9]+[0-9]{5}$/;
         if (!validID.test(data)||data.length>7){
             console.log('no valido');
-            setScanned(false)
-            return
+            toast.show('Expediente No Valido', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
+            setTimeout(() => {
+                setText(
+                    textDefault
+                );
+                setScanned(false);
+            }, 3000);
+            return;
         }
-        if (temporalStundetIds.includes(data)) {        
+        if (temporalStundetIds.includes(data) || exps.includes(data)) {        
             toast.show('Ya se ha agregado este estudiante', { type: 'warning', placement: 'bottom', style: { marginBottom: 40 }, duration: 2999 });
             setTimeout(() => {
                 setText(
@@ -60,7 +68,6 @@ export const CodeScanner = () => {
                 );
                 setScanned(false);
             }, 3000);
-
             return;
         }
 
@@ -155,7 +162,7 @@ export const CodeScanner = () => {
 
                     <View style={styles.eventInfoContainer}>
                         <Text style={{ color: 'white' }}>Evento</Text>
-                        <Text style={{ color: 'white', marginTop: 20, fontSize: 20 }}>{currentSpreadsheetPage}</Text>
+                        <Text style={{ color: 'white', marginTop: HEIGHT*0.02, fontSize: WIDTH*0.049 }}>{currentSpreadsheetPage}</Text>
                     </View>
 
                     <View style={styles.onlineStatusContainer}>
@@ -166,7 +173,7 @@ export const CodeScanner = () => {
                     </View>
                 </View>
                 <View style={styles.textScan}>
-                    <Text style={{ color: 'white', fontSize: 16, textAlign: 'center'}}>{text}</Text>
+                    <Text style={{ color: 'white', fontSize: WIDTH*0.05, textAlign: 'center'}}>{text}</Text>
                 </View>
             
             </View>
@@ -175,70 +182,6 @@ export const CodeScanner = () => {
 
     )
 }
-
-/*const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        width: '123%',
-        flex: 1,
-        zIndex: -1,
-        position: 'absolute',
-    },
-    floatingMenuContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        borderRadius: 10,
-        marginTop: 20,
-        padding: 10,
-        paddingHorizontal: 24,
-        top: `20%`,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    backBtn: {
-        width: 33,
-        height: 33,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    backIcon: {
-        width: 16,
-        height: 16,
-        resizeMode: 'contain'
-    },
-    eventInfoContainer: {
-        width: '50%',
-        height: 60,
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    onlineStatusContainer: {
-        width: 33,
-        height: 33,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    onlineStatusIcon: {
-        width: 16,
-        height: 16,
-        marginBottom: 4,
-        resizeMode: 'contain'
-    },
-
-    textScan: {
-        textAlign: 'center',
-        top: `20%`,
-    },
-})*/
 const styles = StyleSheet.create({
     container: {
         height: '100%',
@@ -305,7 +248,7 @@ const styles = StyleSheet.create({
     mainScan: {
         alignContent: 'center',
         justifyContent: 'space-around',
-        border: 1,
+        // border: 1,
         //borderWidth: 5,
         borderColor: 'red',
     },
