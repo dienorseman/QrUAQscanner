@@ -31,8 +31,6 @@ export const SpreadsheetSelector = () => {
         if (selectedId != "Offline") {
             fetchColumnAData();
             // console.log(fetchColumnAData);
-        }else{
-            
         }
     }, [selectedId]);
 
