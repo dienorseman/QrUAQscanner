@@ -44,10 +44,11 @@ export const MainScreen = () => {
                                 <SafeAreaView />
                                 <Tittle />
                                 <SpreadsheetSelector />
+                                <NavBar onPress = {()=> setIsSheetAdded(false)} onPressAdd={handleUpload} onPressExit={BackHandler.exitApp}/>
                                 {/* <NavBar onPress = {()=> setIsSheetAdded(false)}/> */}
-                                <View style={styles.buttonContainer}>
+                                {/* <View style={styles.buttonContainer}>
                                     <Button title="Regresar al Inicio" onPress={() => setIsSheetAdded(false)} color="#001C99" />
-                                </View>
+                                </View> */}
                             </>)
                     }
                     <StatusBar style="auto" />
