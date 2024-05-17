@@ -20,6 +20,10 @@ export const CodeScanner = () => {
 
     const toast = useToast();
 
+    const temporalStudents = store.getState().qr.temporalStundetIds;
+    const pendingExps = store.getState().qr.expedientesPormandar;
+    const columnAData = store.getState().qr.columnAData;
+
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const [scanned, setScanned] = useState(false);
 
