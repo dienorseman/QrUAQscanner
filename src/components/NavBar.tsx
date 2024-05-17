@@ -30,17 +30,27 @@ export const NavBar: React.FC<NavBarProps> = ({ onPress, onPressAdd, onPressExit
 const styles = StyleSheet.create({
   navBar: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#fff',
     padding: 10,
   },
   button: {
-    backgroundColor: '#6a0dad',
+    backgroundColor: '#841584',
     padding: 10,
     borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   text: {
     color: '#fff',
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    overflow: 'hidden',
+    borderRadius: 10,
+    position: 'relative',
+    width: '95%',
+    margin: 10,
+},
 });
