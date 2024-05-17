@@ -19,7 +19,7 @@ export const useUploadStudents = () => {
       for (const expediente of numExpedientes   ) {
         try{
           addStudentId(expediente, dispatch, currentSpreadsheetPage);
-          dispatch(clearTemporalStudentIds());
+          // dispatch(clearTemporalStudentIds());
           dispatch(removependingExpediente(expediente));
         }catch(error){
           console.error(error);
