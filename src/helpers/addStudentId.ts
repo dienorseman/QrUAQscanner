@@ -1,11 +1,14 @@
 import axios from 'axios';
-import { addTemporalStudentId, addpendingExpediente } from '../store/qr/qrSlice'; 
+import { addTemporalStudentId, addpendingExpediente, removependingExpediente, clearTemporalStudentIds,removeColumnAData } from '../store/qr/qrSlice'; 
 import { store } from '../store/store';
 import { useToast } from 'react-native-toast-notifications';
 
 export const addStudentId = (text: string, dispatch: typeof store.dispatch, currentSpreadsheetPage: string) => {
 
   const temporalSpreadSheet = store.getState().qr.temporalSpreadSheetPage;
+  const temporalStudents = store.getState().qr.temporalStundetIds;
+  const pendingExps = store.getState().qr.expedientesPormandar;
+  const columnAData = store.getState().qr.columnAData;
   const sheetsId = store.getState().qr.sheetsId;
   const addUrl = 'https://script.google.com/macros/s/AKfycbyZWqsMPVumZDOjfUEXbUrApiwty7jpGPKomBMBTBGijPbAqDPuJtJ7kp3whoU9H_IU/exec';
 
@@ -42,11 +45,11 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
             .then((res) => {
               console.log(res.status);
               dispatch(addTemporalStudentId(text));
+              dispatch(removependingExpediente(text));
+              dispatch(clearTemporalStudentIds());
             })
             .catch((e) => {
               console.error('Error:', e);
-              dispatch(addpendingExpediente(text));
-              dispatch(addTemporalStudentId(text));
             });
         }
       } else {
@@ -71,11 +74,11 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
               .then((res) => {
                 console.log(res.status);
                 dispatch(addTemporalStudentId(text));
+                dispatch(removependingExpediente(text));
+                dispatch(clearTemporalStudentIds());
               })
               .catch((e) => {
                 console.error('Error:', e);
-                dispatch(addpendingExpediente(text));
-                dispatch(addTemporalStudentId(text));
               });
           }
         } else {
@@ -92,6 +95,8 @@ export const addStudentId = (text: string, dispatch: typeof store.dispatch, curr
         console.error("Ya se registró ese expediente anteriormente");
       }else{
         dispatch(addTemporalStudentId(text));
+        dispatch(removependingExpediente(text));
+        dispatch(clearTemporalStudentIds());
         if(!pendingExps.includes(text)){
           dispatch(addpendingExpediente(text));
         }else{

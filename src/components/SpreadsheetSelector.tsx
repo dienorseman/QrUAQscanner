@@ -28,7 +28,7 @@ export const SpreadsheetSelector = () => {
 
     // UseEffect to fetch the column data from the selected sheet.
     useEffect(() => {
-        if (selectedId) {
+        if (selectedId != "Offline") {
             fetchColumnAData();
             // console.log(fetchColumnAData);
         }
