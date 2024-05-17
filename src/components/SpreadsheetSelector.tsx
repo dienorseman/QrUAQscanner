@@ -95,7 +95,7 @@ export const SpreadsheetSelector = () => {
                         {selectedId && selectedId != "Offline" && expedientesPormandar.length>0 && <ColumnCheckList columnCheckList={expedientesPormandar}  />}
                         {selectedId && selectedId != "Offline" && <ColumnADataList columnAData={columnAData}  />}
                         {selectedId === "Offline" &&  <ColumnADataList columnAData={expedientesPormandar} />}
-                        {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button color="#841584" title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>}
+                        {/* {selectedId && selectedId != "Offline" && <View style={styles.buttonContainer}><Button color="#841584" title="Enviar Expedientes Pendientes" onPress={uploadStudents} /></View>} */}
                     </View>
             }
         </View>
